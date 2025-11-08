@@ -69,12 +69,12 @@ public class DatabaseConfig {
             input.close();
 
         } catch (IOException e) {
-            System.err.println("❌ ERROR: Could not find database.properties file!");
+            System.err.println("ERROR: Could not find database.properties file!");
             System.err.println("Please create resources/database.properties from the example file");
             System.err.println("Details: " + e.getMessage());
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
-            System.err.println("❌ ERROR: Database driver not found!");
+            System.err.println("ERROR: Database driver not found!");
             System.err.println("Make sure MySQL Connector JAR is in your project");
             System.err.println("Details: " + e.getMessage());
             e.printStackTrace();
@@ -106,12 +106,12 @@ public class DatabaseConfig {
     public static boolean testConnection() {
         try (Connection conn = getConnection()) {
             if (conn != null && !conn.isClosed()) {
-                System.out.println("✓ Database connection test successful!");
+                System.out.println("Database connection test successful!");
                 System.out.println("Connected to: " + conn.getMetaData().getDatabaseProductName());
                 return true;
             }
         } catch (SQLException e) {
-            System.err.println("❌ Database connection test failed!");
+            System.err.println("Database connection test failed!");
             System.err.println("Details: " + e.getMessage());
             e.printStackTrace();
         }
@@ -127,9 +127,9 @@ public class DatabaseConfig {
         if (connection != null) {
             try {
                 connection.close();
-                System.out.println("✓ Database connection closed");
+                System.out.println("Database connection closed");
             } catch (SQLException e) {
-                System.err.println("⚠ Warning: Could not close connection properly");
+                System.err.println("Warning: Could not close connection properly");
                 e.printStackTrace();
             }
         }
