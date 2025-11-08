@@ -13,18 +13,76 @@
 # ===== IntelliJ IDEA =====
 .idea/
 *.iml
-*.iws 
+*.iws
 
 # ===== Eclipse =====
-.project 
-.classpath 
-.settings/    
-/.metadata/   
+.project
+.classpath
+.settings/
+/.metadata/
 
 # ===== VS Code =====
-.vscode/      
-*.code-workspace   
+.vscode/
+*.code-workspace
 
 # ===== OS / System files =====
-.DS_Store           
-Thumbs.db        
+.DS_Store
+Thumbs.db
+
+# ===== Database Configuration =====
+resources/database.properties
+database.properties
+*.properties
+
+# Allowing the example/template file
+!database.properties.example
+!*example.properties
+
+# ===== JavaFX / External Libraries =====
+# If you download JavaFX SDK locally
+lib/javafx-sdk/
+lib/*.jar
+
+# ===== Database Drivers =====
+# MySQL Connector, PostgreSQL driver, etc.
+mysql-connector-*.jar
+postgresql-*.jar
+ojdbc*.jar
+
+# ===== Logs =====
+*.log
+logs/
+
+# ===== Temporary files =====
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# ===== Maven / Gradle (if we use them later) =====
+.mvn/
+mvnw
+mvnw.cmd
+.gradle/
+gradle/
+gradlew
+gradlew.bat
+
+# ===== NetBeans =====
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# ===== Package Files =====
+*.nar
+*.zip
+*.tar.gz
+*.rar
+
+# ===== Backup files =====
+*.bak
+*.backup
+*~     
