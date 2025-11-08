@@ -1,0 +1,9 @@
+# Database Configuration Template
+# Copy this file to database.properties and fill in your credentials
+
+db.host=localhost
+db.port=3306
+db.name=YOUR_DATABASE_NAME
+db.user=YOUR_USERNAME
+db.password=YOUR_PASSWORD
+db.driver=com.mysql.cj.jdbc.Driver
