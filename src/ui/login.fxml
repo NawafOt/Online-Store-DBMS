@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<Scene xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.LoginPage">
+   <root>
+      <AnchorPane prefHeight="400.0" prefWidth="600.0">
+         <children>
+            <TextField layoutX="226.0" layoutY="167.0" />
+            <TextField layoutX="226.0" layoutY="209.0" />
+            <Button layoutX="245.0" layoutY="253.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="112.0" text="Continue" />
+            <Button layoutX="233.0" layoutY="364.0" mnemonicParsing="false" text="Register" />
+            <Separator layoutX="-1.0" layoutY="325.0" prefHeight="6.0" prefWidth="600.0" />
+            <Button layoutX="314.0" layoutY="364.0" mnemonicParsing="false" text="Guest" />
+            <Label layoutX="153.0" layoutY="331.0" prefHeight="17.0" prefWidth="322.0" text="IF youre not a registered.... use one of these" />
+            <Label layoutX="159.0" layoutY="171.0" prefHeight="17.0" prefWidth="35.0" text="Label" />
+            <Label layoutX="159.0" layoutY="213.0" prefHeight="17.0" prefWidth="35.0" text="Label" />
+         </children>
+      </AnchorPane>
+   </root>
+</Scene>
