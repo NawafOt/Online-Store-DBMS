@@ -9,7 +9,7 @@ import java.util.Objects;
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("customer_main.fxml")));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/ui/LoginPage.fxml")));
         Scene scene = new Scene(root, 900, 600);
         primaryStage.setTitle("E-Commerce Shop");
         primaryStage.setScene(scene);
