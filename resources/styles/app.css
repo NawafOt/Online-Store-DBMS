@@ -1,0 +1,44 @@
+@font-face {
+    font-family: "Inter UI";
+    src: url("../fonts/Inter UI/Inter_18pt-Regular.ttf");
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: "Inter UI";
+    /* Corrected path: Go up one level, then into the fonts folder */
+    src: url("../fonts/Inter UI/Inter_18pt-SemiBold.ttf");
+    font-weight: 600;
+}
+
+.root {
+    -fx-background-color: #EAFBFF;
+}
+
+.header { -fx-background-color: #263743; -fx-padding: 12; }
+
+.primary-btn {
+    -fx-background-color: #E77023;
+    -fx-text-fill: white;
+    -fx-padding: 8 14;
+    -fx-background-radius: 6;
+    -fx-font-family: "Inter UI", system;
+    -fx-font-weight: 600;
+}
+
+.card {
+    -fx-font-family: "Inter UI", system;
+    -fx-background-color: #FFFFFF;
+    -fx-padding: 12;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0, 0, 2);
+}
+
+.muted { -fx-text-fill: #88A0B0; }
+.accent { -fx-text-fill: #0F555A; }
+
+.title-text {
+    -fx-font-size: 24px;
+    -fx-text-fill: #263743;
+    -fx-font-weight: 600;
+}
