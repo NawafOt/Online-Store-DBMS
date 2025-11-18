@@ -1,4 +1,4 @@
 package ui.customer.pages;
 
-public class LoginPage {
+public class RegisterPage {
 }
