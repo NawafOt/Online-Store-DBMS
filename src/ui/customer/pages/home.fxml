@@ -1,14 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="ui.customer.pages.HomePage"
-            prefHeight="400.0" prefWidth="600.0">
-
-</AnchorPane>
+<StackPane styleClass="background-container" stylesheets="@../../../../resources/styles/app.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.customer.pages.RegisterPage">
+    <children>
+        <AnchorPane maxHeight="400.0" maxWidth="600.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: transparent;" styleClass="root">
+            <children>
+                <VBox alignment="TOP_CENTER" spacing="15.0" styleClass="card" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="50.0">
+                    <children>
+                        <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0">
+                            <children>
+                                <Button alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" text="EXIT" textAlignment="CENTER">
+                                    <graphic>
+                                        <ImageView fitHeight="32.0" fitWidth="32.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
+                                            <image>
+                                                <Image url="@../../../../resources/images/icons/cart.png" />
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                    <styleClass>
+                                        <String fx:value="primary-btn" />
+                                        <String fx:value="icon-button" />
+                                    </styleClass>
+                                </Button>
+                                <Region prefHeight="38.0" prefWidth="72.0" />
+                                <Label alignment="CENTER" prefWidth="260.0" styleClass="title-text" text="Home" textAlignment="CENTER" />
+                                <Region layoutX="48.0" layoutY="10.0" prefHeight="38.0" prefWidth="72.0" />
+                                <Button alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="1.0" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" text="EXIT" textAlignment="CENTER">
+                                    <graphic>
+                                        <ImageView fitHeight="32.0" fitWidth="32.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
+                                            <image>
+                                                <Image url="@../../../../resources/images/icons/log-out.png" />
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                    <styleClass>
+                                        <String fx:value="primary-btn" />
+                                        <String fx:value="icon-button" />
+                                    </styleClass>
+                                </Button>
+                            </children>
+                        </HBox>
+                  <Region>
+                     <padding>
+                        <Insets bottom="10.0" top="10.0" />
+                     </padding>
+                  </Region>
+                  <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0">
+                     <children>
+                        <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" styleClass="primary-btn" text="Wish List" />
+                        <Region prefHeight="30.0" prefWidth="60.0" />
+                        <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="160.0" styleClass="primary-btn" text="Profile" />
+                        <Region layoutX="74.0" layoutY="10.0" prefHeight="30.0" prefWidth="60.0" />
+                        <Button layoutX="74.0" layoutY="10.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" styleClass="primary-btn" text="Orders" />
+                     </children>
+                  </HBox>
+                  <Separator prefWidth="200.0" scaleY="1.5">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <padding>
+                        <Insets bottom="10.0" top="10.0" />
+                     </padding>
+                  </Separator>
+                  <ListView orientation="HORIZONTAL" styleClass="muted" />
+                    </children>
+                </VBox>
+            </children>
+        </AnchorPane>
+    </children>
+</StackPane>
