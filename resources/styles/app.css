@@ -1,5 +1,5 @@
 .root {
-    -fx-background-color: #EAFBFF;
+    -fx-background-color: transparent;
 }
 
 .header { -fx-background-color: #263743; -fx-padding: 12; }
@@ -11,19 +11,21 @@
     -fx-background-radius: 6;
     -fx-font-family: "Inter UI", system;
     -fx-font-weight: 600;
+}
 
-
+.primary-btn:hover {
+    -fx-background-color: #a34d15;
 }
 
 .icon-button {
-    -fx-padding: 6;
+    -fx-padding: 3;
 }
 
 .card {
     -fx-font-family: "Inter UI", system;
     -fx-background-color: #FFFFFF;
     -fx-padding: 12;
-    -fx-background-radius: 8;
+    -fx-background-radius: 16;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0, 0, 2);
 }
 
@@ -34,4 +36,36 @@
     -fx-font-size: 24px;
     -fx-text-fill: #263743;
     -fx-font-weight: 600;
+}
+
+.text-field {
+    -fx-font-family: "Inter UI", system;
+    -fx-font-size: 14px;
+    -fx-padding: 6 8;
+    -fx-border-color: #D0DDE6;
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #263743;
+    -fx-control-inner-background: #FFFFFF;
+}
+
+.text-field:focused {
+    -fx-border-color: #E77023;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(231, 112, 35, 0.2), 4, 0, 0, 0);
+}
+
+.text-field:disabled {
+    -fx-opacity: 0.6;
+    -fx-background-color: #F5F5F5;
+}
+
+.background-container {
+    -fx-background-color: #EAFBFF;
+    -fx-background-image: url("/images/SplashBG1.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center center;
+    -fx-background-size: cover;
+    -fx-padding: 0;
 }
