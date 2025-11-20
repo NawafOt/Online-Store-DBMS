@@ -56,8 +56,6 @@
     -fx-effect: dropshadow(gaussian, rgba(231, 112, 35, 0.2), 4, 0, 0, 0);
 }
 
-.text-field:cancel
-
 .text-field:disabled {
     -fx-opacity: 0.6;
     -fx-background-color: #F5F5F5;

@@ -6,7 +6,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<StackPane styleClass="background-container" stylesheets="@../../../../resources/styles/app.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.customer.pages.RegisterPage">
+<StackPane styleClass="background-container" stylesheets="@../../../../resources/styles/app.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.customer.pages.HomePage">
     <children>
         <AnchorPane maxHeight="400.0" maxWidth="600.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: transparent;" styleClass="root">
             <children>
@@ -16,10 +16,7 @@
                             <children>
                                 <Button alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" text="EXIT" textAlignment="CENTER">
                                     <graphic>
-                                        <ImageView fitHeight="32.0" fitWidth="32.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
-                                            <image>
-                                                <Image url="@../../../../resources/images/icons/cart.png" />
-                                            </image>
+                                        <ImageView fx:id="iconCartView" fitHeight="32.0" fitWidth="32.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
                                         </ImageView>
                                     </graphic>
                                     <styleClass>
@@ -30,12 +27,9 @@
                                 <Region prefHeight="38.0" prefWidth="72.0" />
                                 <Label alignment="CENTER" prefWidth="260.0" styleClass="title-text" text="Home" textAlignment="CENTER" />
                                 <Region layoutX="48.0" layoutY="10.0" prefHeight="38.0" prefWidth="72.0" />
-                                <Button alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="1.0" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" text="EXIT" textAlignment="CENTER">
+                                <Button alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="1.0" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#handleLogout" text="EXIT" textAlignment="CENTER">
                                     <graphic>
-                                        <ImageView fitHeight="32.0" fitWidth="32.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
-                                            <image>
-                                                <Image url="@../../../../resources/images/icons/log-out.png" />
-                                            </image>
+                                        <ImageView fx:id="iconLogoutView" fitHeight="32.0" fitWidth="32.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
                                         </ImageView>
                                     </graphic>
                                     <styleClass>
@@ -54,7 +48,7 @@
                      <children>
                         <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" styleClass="primary-btn" text="Wish List" />
                         <Region prefHeight="30.0" prefWidth="60.0" />
-                        <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="160.0" styleClass="primary-btn" text="Profile" />
+                        <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onMouseClicked="#handleProfile" prefHeight="30.0" prefWidth="160.0" styleClass="primary-btn" text="Profile" />
                         <Region layoutX="74.0" layoutY="10.0" prefHeight="30.0" prefWidth="60.0" />
                         <Button layoutX="74.0" layoutY="10.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" styleClass="primary-btn" text="Orders" />
                      </children>
