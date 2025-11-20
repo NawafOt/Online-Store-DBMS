@@ -44,8 +44,9 @@ lib/javafx-sdk/
 lib/*.jar
 
 # ===== Database Drivers =====
-# MySQL Connector, PostgreSQL driver, etc.
+# MySQL Connector, MariaDB driver, PostgreSQL driver, etc.
 mysql-connector-*.jar
+mariadb-java-client-*.jar
 postgresql-*.jar
 ojdbc*.jar
 
@@ -86,3 +87,4 @@ gradlew.bat
 *.bak
 *.backup
 *~     
+resources/fonts/

@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<StackPane styleClass="background-container" stylesheets="@../../../../resources/styles/app.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.customer.pages.ProfilePage">
+<StackPane styleClass="background-container" stylesheets="@../../../../resources/styles/app.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.customer.pages.RegisterPage">
     <children>
         <AnchorPane maxHeight="400.0" maxWidth="600.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: transparent;" styleClass="root">
             <children>
@@ -15,9 +15,10 @@
                     <children>
                         <HBox prefHeight="100.0" prefWidth="200.0">
                             <children>
-                                <Button alignment="CENTER" onMouseClicked="#handleBack" contentDisplay="GRAPHIC_ONLY" graphicTextGap="1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" text="EXIT" textAlignment="CENTER">
+                                <Button alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" text="EXIT" textAlignment="CENTER">
                                     <graphic>
-                                        <ImageView fx:id="iconReturn" fitHeight="30" fitWidth="30" pickOnBounds="true" preserveRatio="true">
+                                        <ImageView fx:id="iconImageView" fitHeight="30" fitWidth="30"
+                                                   pickOnBounds="true" preserveRatio="true" >
                                         </ImageView>
                                     </graphic>
                                     <styleClass>
@@ -26,10 +27,9 @@
                                     </styleClass>
                                 </Button>
                                 <Region prefHeight="38.0" prefWidth="72.0" />
-                                <Label alignment="CENTER" prefHeight="35.0" prefWidth="260.0" styleClass="title-text" text="Profile" textAlignment="CENTER" />
+                                <Label alignment="CENTER" prefHeight="35.0" prefWidth="260.0" styleClass="title-text" text="Register New Account" textAlignment="CENTER" />
                             </children>
                         </HBox>
-                  <ImageView fx:id="iconProfileCircle" fitHeight="96.0" fitWidth="96.0" pickOnBounds="true" preserveRatio="true" />
 
                         <GridPane alignment="CENTER" hgap="10.0" vgap="30.0">
                             <columnConstraints>
@@ -41,6 +41,7 @@
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             </rowConstraints>
 
                             <Label text="Name" GridPane.columnIndex="0" GridPane.rowIndex="0">
@@ -48,33 +49,46 @@
                                     <Font size="16.0" />
                                 </font>
                             </Label>
-                            <TextField editable="false" focusTraversable="false" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                            <TextField promptText="Example: John Doe" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
                             <Label text="Email" GridPane.columnIndex="0" GridPane.rowIndex="1">
                                 <font>
                                     <Font size="16.0" />
                                 </font>
                             </Label>
-                            <TextField editable="false" focusTraversable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                            <TextField promptText="example@domain.com" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
                             <Label text="Phone Number" GridPane.rowIndex="2">
                                 <font>
                                     <Font size="16.0" />
                                 </font>
                             </Label>
-                            <TextField editable="false" focusTraversable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                            <TextField promptText="+966 xxx xxx xxxx" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-                            <Label text="Address" GridPane.rowIndex="3">
+                            <Label text="Password" GridPane.rowIndex="3">
                                 <font>
                                     <Font size="16.0" />
                                 </font>
                             </Label>
-                            <TextField editable="false" focusTraversable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                            <PasswordField promptText="Between 3 and 12 Characters" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                            <Label text="Address" GridPane.rowIndex="4">
+                                <font>
+                                    <Font size="16.0" />
+                                </font>
+                            </Label>
+                            <TextField promptText="City, State ZIPCODE" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
                             <padding>
                                 <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
                             </padding>
                         </GridPane>
+
+                        <Button mnemonicParsing="false" prefWidth="100.0" styleClass="primary-btn" text="Register!">
+                            <VBox.margin>
+                                <Insets bottom="5.0" top="10.0" />
+                            </VBox.margin>
+                        </Button>
                     </children>
                 </VBox>
             </children>
