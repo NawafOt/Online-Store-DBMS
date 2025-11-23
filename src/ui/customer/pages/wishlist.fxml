@@ -1,20 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<StackPane styleClass="background-container" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.customer.pages.WishlistPage">
-   <children>
-      <AnchorPane maxHeight="600.0" maxWidth="800.0" style="-fx-background-color: transparent;">
-          <children>
-              <VBox alignment="TOP_CENTER" spacing="15.0" styleClass="card" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="50.0">
-                  <children>
-                      <Label alignment="CENTER" styleClass="title-text" text="My Wishlist" textAlignment="CENTER" />
-                      <Label text="Your wishlist items will appear here" styleClass="muted" />
-                  </children>
-              </VBox>
-          </children>
-      </AnchorPane>
-   </children>
+<StackPane styleClass="background-container" stylesheets="@../../../../resources/styles/app.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.customer.pages.WishlistPage">
+    <children>
+        <AnchorPane maxHeight="400.0" maxWidth="600.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: transparent;" styleClass="root">
+            <children>
+                <VBox alignment="TOP_CENTER" spacing="15.0" styleClass="card" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="50.0">
+                    <children>
+                        <HBox>
+                            <children>
+                                <Button alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#handleBack" text="EXIT" textAlignment="CENTER">
+                                    <graphic>
+                                        <ImageView fx:id="iconReturn" fitHeight="30" fitWidth="30" pickOnBounds="true" preserveRatio="true">
+                                        </ImageView>
+                                    </graphic>
+                                    <styleClass>
+                                        <String fx:value="primary-btn" />
+                                        <String fx:value="icon-button" />
+                                    </styleClass>
+                                </Button>
+                                <Region prefHeight="38.0" prefWidth="72.0" />
+                                <Label alignment="CENTER" prefHeight="35.0" prefWidth="260.0" styleClass="title-text" text="Wish List" textAlignment="CENTER" />
+                            </children>
+                        </HBox>
+                        <ScrollPane fx:id="scrollPane" fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+                            <content>
+                                <VBox fx:id="cardContainer" alignment="TOP_CENTER" spacing="12">
+                                    <padding>
+                                        <Insets bottom="12" left="12" right="12" top="12" />
+                                    </padding>
+                                </VBox>
+                            </content>
+                        </ScrollPane>
+                    </children>
+                </VBox>
+            </children>
+        </AnchorPane>
+    </children>
 </StackPane>
-

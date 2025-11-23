@@ -1,5 +1,10 @@
 package model;
 
+import javafx.stage.Stage;
+import ui.customer.pages.CartPage;
+
+import java.util.ArrayList;
+
 /**
  * Session class to manage the current user's login state.
  * Uses Singleton pattern to ensure only one active session exists.
@@ -8,6 +13,7 @@ package model;
 public class Session {
 
     private static Session instance;
+    private static final ArrayList<Product> cartSelection = new ArrayList<>();
 
     public enum UserRole {
         GUEST,
@@ -42,6 +48,7 @@ public class Session {
         this.currentRole = UserRole.CUSTOMER;
         this.isLoggedIn = true;
         this.adminId = -1;
+        cartSelection.clear();
         // System.out.println("Customer logged in: " + customer.getName());
     }
 
@@ -51,6 +58,7 @@ public class Session {
         this.currentRole = UserRole.ADMIN;
         this.isLoggedIn = true;
         this.currentCustomer = null;
+        cartSelection.clear();
         // System.out.println("Admin logged in: " + adminName);
     }
 
@@ -60,6 +68,7 @@ public class Session {
         this.currentRole = UserRole.GUEST;
         this.isLoggedIn = false;
         this.adminId = -1;
+        cartSelection.clear();
         // System.out.println("User logged out");
     }
 
@@ -147,6 +156,10 @@ public class Session {
         if (currentRole != UserRole.ADMIN) {
             throw new IllegalStateException("Admin permission required");
         }
+    }
+
+    public ArrayList<Product> getCart() {
+        return cartSelection;
     }
 
 
