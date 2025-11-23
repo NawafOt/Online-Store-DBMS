@@ -8,10 +8,11 @@ import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import model.Product;
 import model.Session;
+import ui.commons.CardAction;
+import ui.commons.CardController;
 import ui.PageManager;
 
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ public class WishlistPage {
 
     private void addCardForProduct(Product prod, Function<Product, String[]> mapper) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/customer/pages/Card.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/commons/Card.fxml"));
             Node cardNode = loader.load(); //card nodes we will insert tinto the scroll pane
             CardController<Product> controller = loader.getController();
 
