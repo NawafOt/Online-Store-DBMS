@@ -48,4 +48,8 @@ public class HomePage {
     public void handleOrders() {
         PageManager.loadPage("customer/pages/orders.fxml");
     }
+
+    public void handleCart() {
+        PageManager.loadPage("customer/pages/cart.fxml");
+    }
 }
