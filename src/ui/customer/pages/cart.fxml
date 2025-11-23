@@ -39,7 +39,7 @@
                         </ScrollPane>
                   <HBox alignment="CENTER" prefHeight="50.0">
                      <children>
-                        <Button alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefWidth="100.0" styleClass="primary-btn" text="Cancel" />
+                        <Button alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefWidth="100.0" styleClass="primary-btn" text="Clear All" />
                         <Region prefHeight="50.0" prefWidth="194.0" />
                         <Button alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefWidth="100.0" styleClass="primary-btn" text="Checkout" />
                      </children>
