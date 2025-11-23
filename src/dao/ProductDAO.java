@@ -71,6 +71,25 @@ public class ProductDAO extends BaseDAO<Product> {
     }
 
 
+    public  List<Product> getLimited(int limit, int offset, boolean descending) {
+        if (limit < 1)
+            throw new IllegalArgumentException("limit must be greater than 0");
+        if (offset < 0)
+            throw new IllegalArgumentException("offset must be non-negative");
+
+        String orderType = (descending ? "DESC" : "ASC");
+
+        String query = String.format(
+                "SELECT * " +
+                "FROM Product " +
+                "ORDER BY Name %s" +
+                "LIMIT %d offset %d",
+                orderType, limit, offset); // classical method because why not?
+
+        return executeQuery(query);
+    }
+
+
     public List<Product> searchByName(String name) {
         String query = "SELECT * FROM Product WHERE Name LIKE ?";
         return executeQuery(query, "%" + name + "%");
