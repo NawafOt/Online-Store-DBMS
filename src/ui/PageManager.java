@@ -4,12 +4,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import model.Session;
 
 import java.io.IOException;
 
 public class PageManager {
     private static Stage primaryStage;
     private static final String CSS_PATH = "/styles/app.css";
+    private static final Session SESSION = Session.getInstance(); //maybe use this??? idk
 
     public static void initialize(Stage stage) {
         primaryStage = stage;
