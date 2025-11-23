@@ -10,6 +10,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import model.Order;
 import model.Session;
+import ui.commons.CardAction;
+import ui.commons.CardController;
 import ui.PageManager;
 
 import java.sql.Date;
@@ -48,15 +50,15 @@ public class OrdersPage {
 
     private Function<Order, String[]> getOrderFunction() {
         return order -> new String[]{
-                String.format("%d", order.getOid()),
-                order.getDate().toString(),
+                "Order ID: " + String.format("%d", order.getOid()),
+                "Date: " + order.getDate().toString(),
                 order.getStatus()
         };
     }
 
     private void addCardForOrder(Order order, Function<Order, String[]> mapper) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/customer/pages/Card.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/commons/Card.fxml"));
             Node cardNode = loader.load(); //card nodes we will insert tinto the scroll pane
             CardController<Order> controller = loader.getController();
 
