@@ -21,6 +21,12 @@ import java.util.function.Function;
 
 import java.util.Objects;
 
+/**
+ * Controller for displaying a customer's list of orders.
+ *
+ * <p>Populates a scrollable list of order cards; each card can expose
+ * actions such as viewing details.</p>
+ */
 public class OrdersPage {
     @FXML private ImageView iconReturn;
     @FXML private ScrollPane scrollPane;
@@ -30,6 +36,9 @@ public class OrdersPage {
     private final int customerID = Session.getInstance().getCustomerId();
 
 
+    /**
+     * FXML initialization: loads icons and sample orders and populates the UI.
+     */
     @FXML
     public void initialize() {
         loadImages();
@@ -48,6 +57,11 @@ public class OrdersPage {
 
     }
 
+    /**
+     * Create a mapper from Order to the strings used on the card.
+     *
+     * @return function mapping Order to {title, date, status}
+     */
     private Function<Order, String[]> getOrderFunction() {
         return order -> new String[]{
                 "Order ID: " + String.format("%d", order.getOid()),
@@ -56,6 +70,12 @@ public class OrdersPage {
         };
     }
 
+    /**
+     * Create and insert a card node for the specified order.
+     *
+     * @param order  order to display
+     * @param mapper mapper used to generate display strings
+     */
     private void addCardForOrder(Order order, Function<Order, String[]> mapper) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/commons/Card.fxml"));
@@ -80,6 +100,9 @@ public class OrdersPage {
     }
 
 
+    /**
+     * Load small page icons and set them on the corresponding ImageView.
+     */
     private void loadImages() {
         try {
             Image returnIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icons/undoWhite.png")));
@@ -90,6 +113,9 @@ public class OrdersPage {
     }
 
 
+    /**
+     * Navigate back to the customer home page.
+     */
     @FXML
     public void handleBack() {
         PageManager.loadPage("customer/pages/home.fxml");

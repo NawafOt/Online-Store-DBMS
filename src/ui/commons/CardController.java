@@ -12,6 +12,16 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 
+/**
+ * Controller for a generic card UI component.
+ *
+ * <p>The card displays a title and two lines of text and can attach
+ * a dropdown menu with actions. The controller is generic over T;
+ * callers provide a mapper to convert a T to a String[] with up to
+ * three display lines: title, line1, line2.</p>
+ *
+ * @param <T> domain object type used to populate the card
+ */
 public class CardController<T> {
     @FXML public VBox root;
     @FXML private Label titleLabel;
@@ -19,8 +29,14 @@ public class CardController<T> {
     @FXML private Label line2;
     @FXML private MenuButton menuBtn;
 
-    // setData fills labels and builds the menu
-    // mapper: you pass a function that turns your domain T into simple strings for display
+    /**
+     * Populate the card's labels and build its menu.
+     *
+     * @param data    the domain object for this card
+     * @param mapper  function that maps the domain object to a String array:
+     *                [title, line1, line2] (elements may be missing)
+     * @param actions list of card actions to show in the menu
+     */
     public void setData(T data, Function<T, String[]> mapper, List<CardAction> actions) {
         loadImages();
 
@@ -37,6 +53,10 @@ public class CardController<T> {
         }
     }
 
+    /**
+     * Load icon images used by the card. Safe to call multiple times.
+     * Any image-loading failures are handled by logging to stderr.
+     */
     private void loadImages() {
         try {
             Image icon = new Image(Objects.requireNonNull(
@@ -55,6 +75,9 @@ public class CardController<T> {
         }
     }
 
+    /**
+     * Apply CSS classes and popup configuration to the menu button.
+     */
     private void makeMenuButton() {
         menuBtn.getStyleClass().add("primary-btn");
         menuBtn.setPopupSide(javafx.geometry.Side.BOTTOM);
@@ -62,4 +85,3 @@ public class CardController<T> {
     }
 
 }
-

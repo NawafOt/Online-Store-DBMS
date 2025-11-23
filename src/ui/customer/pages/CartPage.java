@@ -19,6 +19,12 @@ import java.util.function.Function;
 
 import java.util.Objects;
 
+/**
+ * Controller for the customer cart page.
+ *
+ * <p>Displays products in the current session cart and allows removal
+ * of items via card actions.</p>
+ */
 public class CartPage {
     @FXML private ImageView iconReturn;
     @FXML private ScrollPane scrollPane;
@@ -27,6 +33,10 @@ public class CartPage {
     private final int customerID = Session.getInstance().getCustomerId();
 
 
+    /**
+     * FXML initialize lifecycle method. Loads images, populates the cart
+     * with sample data (placeholder) and creates card nodes for each product.
+     */
     @FXML
     public void initialize() {
         loadImages();
@@ -47,6 +57,11 @@ public class CartPage {
     }
 
 
+    /**
+     * Produce a mapper that converts a Product to the three display strings.
+     *
+     * @return function mapping Product to {title, price, category}
+     */
     private Function<Product, String[]> getProductFunction() {
         return product -> new String[]{
                 product.getName(),
@@ -55,6 +70,12 @@ public class CartPage {
         };
     }
 
+    /**
+     * Create and insert a card UI node for the given product.
+     *
+     * @param prod   product to display
+     * @param mapper mapper used to create display strings
+     */
     private void addCardForProduct(Product prod, Function<Product, String[]> mapper) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/commons/Card.fxml"));
@@ -80,6 +101,9 @@ public class CartPage {
     }
 
 
+    /**
+     * Load small icons used on the page. Failures print to stderr.
+     */
     private void loadImages() {
         try {
             Image returnIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icons/undoWhite.png")));
@@ -90,6 +114,9 @@ public class CartPage {
     }
 
 
+    /**
+     * Handle navigation back to the home page.
+     */
     @FXML
     public void handleBack() {
         PageManager.loadPage("customer/pages/home.fxml");
