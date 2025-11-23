@@ -16,6 +16,11 @@ public class ProfilePage {
 
     @FXML
     public void initialize() {
+        loadImages();
+
+    }
+
+    private void loadImages() {
         try {
             Image icon1 = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icons/undoWhite.png")));
             iconReturn.setImage(icon1);
