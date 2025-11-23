@@ -1,4 +1,4 @@
-package ui.customer.pages;
+package ui.commons;
 
 public class CardAction {
     public final String text;
