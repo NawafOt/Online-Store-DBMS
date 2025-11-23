@@ -5,6 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <StackPane styleClass="background-container" stylesheets="@../../../../resources/styles/app.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.customer.pages.HomePage">
     <children>
@@ -14,7 +15,7 @@
                     <children>
                         <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0">
                             <children>
-                                <Button alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" text="EXIT" textAlignment="CENTER">
+                                <Button alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleCart" prefHeight="30.0" text="EXIT" textAlignment="CENTER">
                                     <graphic>
                                         <ImageView fx:id="iconCartView" fitHeight="32.0" fitWidth="32.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
                                         </ImageView>
@@ -46,11 +47,20 @@
                   </Region>
                   <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#handleWishList" prefHeight="30.0" prefWidth="120.0" styleClass="primary-btn" text="Wish List" />
+                        <Button mnemonicParsing="false" onAction="#handleWishList" prefHeight="30.0" prefWidth="120.0" styleClass="primary-btn" text="Wish List">
+                           <font>
+                              <Font size="16.0" />
+                           </font></Button>
                         <Region prefHeight="30.0" prefWidth="60.0" />
-                        <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onMouseClicked="#handleProfile" prefHeight="30.0" prefWidth="160.0" styleClass="primary-btn" text="Profile" />
+                        <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onMouseClicked="#handleProfile" prefHeight="35.0" prefWidth="133.0" styleClass="primary-btn" text="Profile">
+                           <font>
+                              <Font size="16.0" />
+                           </font></Button>
                         <Region layoutX="74.0" layoutY="10.0" prefHeight="30.0" prefWidth="60.0" />
-                        <Button layoutX="74.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleOrders" prefHeight="30.0" prefWidth="120.0" styleClass="primary-btn" text="Orders" />
+                        <Button layoutX="74.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleOrders" prefHeight="30.0" prefWidth="120.0" styleClass="primary-btn" text="Orders">
+                           <font>
+                              <Font size="16.0" />
+                           </font></Button>
                      </children>
                   </HBox>
                   <Separator prefWidth="200.0" scaleY="1.5">
