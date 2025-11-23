@@ -46,11 +46,11 @@
                   </Region>
                   <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0">
                      <children>
-                        <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" styleClass="primary-btn" text="Wish List" />
+                        <Button mnemonicParsing="false" onAction="#handleWishList" prefHeight="30.0" prefWidth="120.0" styleClass="primary-btn" text="Wish List" />
                         <Region prefHeight="30.0" prefWidth="60.0" />
                         <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onMouseClicked="#handleProfile" prefHeight="30.0" prefWidth="160.0" styleClass="primary-btn" text="Profile" />
                         <Region layoutX="74.0" layoutY="10.0" prefHeight="30.0" prefWidth="60.0" />
-                        <Button layoutX="74.0" layoutY="10.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" styleClass="primary-btn" text="Orders" />
+                        <Button layoutX="74.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleOrders" prefHeight="30.0" prefWidth="120.0" styleClass="primary-btn" text="Orders" />
                      </children>
                   </HBox>
                   <Separator prefWidth="200.0" scaleY="1.5">
