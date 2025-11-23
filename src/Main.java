@@ -2,10 +2,10 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import ui.PageManager;
 
-import java.util.Objects;
 
 public class Main extends Application {
     @Override
@@ -19,10 +19,13 @@ public class Main extends Application {
         String css = getClass().getResource("/styles/app.css").toExternalForm();
         scene.getStylesheets().add(css);
 
-        primaryStage.setTitle("E-Commerce Shop");
+        Image mainIcon = new Image(getClass().getResourceAsStream("/images/FreeSail-Icon.png"));
+
+        primaryStage.setTitle("Free Sail - Whatever, Whenever!");
         primaryStage.setScene(scene);
         primaryStage.setWidth(1280);
         primaryStage.setHeight(720);
+        primaryStage.getIcons().add(mainIcon);
 
         primaryStage.setMinWidth(600);
         primaryStage.setMinHeight(400);
