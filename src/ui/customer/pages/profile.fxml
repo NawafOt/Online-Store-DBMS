@@ -7,34 +7,35 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<StackPane styleClass="background-container" stylesheets="@../../../../resources/styles/app.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.customer.pages.ProfilePage">
+<StackPane styleClass="background-container" stylesheets="@/styles/app.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.customer.pages.ProfilePage">
     <children>
-        <AnchorPane maxHeight="400.0" maxWidth="600.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: transparent;" styleClass="root">
+        <AnchorPane prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: transparent;" styleClass="root">
             <children>
                 <VBox alignment="TOP_CENTER" spacing="15.0" styleClass="card" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="50.0">
                     <children>
-                        <HBox prefHeight="100.0" prefWidth="200.0">
+                        <HBox alignment="CENTER_LEFT" prefHeight="50.0">
                             <children>
-                                <Button alignment="CENTER" onMouseClicked="#handleBack" contentDisplay="GRAPHIC_ONLY" graphicTextGap="1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" text="EXIT" textAlignment="CENTER">
+                                <Button alignment="CENTER" onMouseClicked="#handleBack" contentDisplay="GRAPHIC_ONLY" graphicTextGap="1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" text="Back" textAlignment="CENTER">
                                     <graphic>
-                                        <ImageView fx:id="iconReturn" fitHeight="30" fitWidth="30" pickOnBounds="true" preserveRatio="true">
-                                        </ImageView>
+                                        <ImageView fx:id="iconReturn" fitHeight="30" fitWidth="30" pickOnBounds="true" preserveRatio="true" />
                                     </graphic>
                                     <styleClass>
                                         <String fx:value="primary-btn" />
                                         <String fx:value="icon-button" />
                                     </styleClass>
                                 </Button>
-                                <Region prefHeight="38.0" prefWidth="72.0" />
-                                <Label alignment="CENTER" prefHeight="35.0" prefWidth="260.0" styleClass="title-text" text="Profile" textAlignment="CENTER" />
+                                <Region HBox.hgrow="ALWAYS" />
+                                <Label alignment="CENTER" styleClass="title-text" text="My Profile" />
+                                <Region HBox.hgrow="ALWAYS" />
+                                <Button fx:id="editButton" onAction="#handleEdit" prefWidth="80.0" styleClass="primary-btn" text="Edit" />
                             </children>
                         </HBox>
-                  <ImageView fx:id="iconProfileCircle" fitHeight="96.0" fitWidth="96.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="iconProfileCircle" fitHeight="96.0" fitWidth="96.0" pickOnBounds="true" preserveRatio="true" />
 
-                        <GridPane alignment="CENTER" hgap="10.0" vgap="30.0">
+                        <GridPane alignment="CENTER" hgap="10.0" vgap="20.0">
                             <columnConstraints>
                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="120.0" />
-                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="300.0" />
                             </columnConstraints>
                             <rowConstraints>
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -43,38 +44,26 @@
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             </rowConstraints>
 
-                            <Label text="Name" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                                <font>
-                                    <Font size="16.0" />
-                                </font>
-                            </Label>
-                            <TextField editable="false" focusTraversable="false" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                            <Label text="Name" GridPane.rowIndex="0" />
+                            <TextField fx:id="nameField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-                            <Label text="Email" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                                <font>
-                                    <Font size="16.0" />
-                                </font>
-                            </Label>
-                            <TextField editable="false" focusTraversable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                            <Label text="Email" GridPane.rowIndex="1" />
+                            <TextField fx:id="emailField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-                            <Label text="Phone Number" GridPane.rowIndex="2">
-                                <font>
-                                    <Font size="16.0" />
-                                </font>
-                            </Label>
-                            <TextField editable="false" focusTraversable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                            <Label text="Phone Number" GridPane.rowIndex="2" />
+                            <TextField fx:id="phoneField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-                            <Label text="Address" GridPane.rowIndex="3">
-                                <font>
-                                    <Font size="16.0" />
-                                </font>
-                            </Label>
-                            <TextField editable="false" focusTraversable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                            <Label text="Address" GridPane.rowIndex="3" />
+                            <TextField fx:id="addressField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
                             <padding>
                                 <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
                             </padding>
                         </GridPane>
+                        
+                        <Label fx:id="feedbackLabel" styleClass="accent" />
+
+                        <Button fx:id="saveButton" onAction="#handleSave" prefWidth="120.0" styleClass="primary-btn" text="Save Changes" visible="false" />
                     </children>
                 </VBox>
             </children>
