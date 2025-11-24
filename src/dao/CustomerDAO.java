@@ -80,6 +80,12 @@ public class CustomerDAO extends BaseDAO<Customer> {
         return results.isEmpty() ? null : results.getFirst();
     }
 
+    public Customer findByPhone(String phone) {
+        String query = "SELECT * FROM Customer WHERE PhoneNumber = ?";
+        List<Customer> results = executeQuery(query, phone);
+        return results.isEmpty() ? null : results.getFirst();
+    }
+
 
     public List<Customer> searchByName(String name) {
         String query = "SELECT * FROM Customer WHERE Name LIKE ?";
@@ -95,7 +101,10 @@ public class CustomerDAO extends BaseDAO<Customer> {
 
 
     public boolean emailExists(String email) {
-        Customer result = findByEmail(email);
-        return result != null;
+        return findByEmail(email) != null;
+    }
+
+    public boolean phoneExists(String phone) {
+        return findByPhone(phone) != null;
     }
 }
