@@ -70,6 +70,18 @@ public class ProductDAO extends BaseDAO<Product> {
         return executeQuery(query);
     }
 
+    /**
+     * Retrieves all products that are on a specific customer's wishlist.
+     * @param customerId The ID of the customer.
+     * @return A list of Product objects.
+     */
+    public List<Product> getProductsByWishlistCustomerId(int customerId) {
+        String query = "SELECT p.* FROM Product p " +
+                       "JOIN Wishlist w ON p.Pid = w.ProductID " +
+                       "WHERE w.CustomerID = ?";
+        return executeQuery(query, customerId);
+    }
+
 
     public  List<Product> getLimited(int limit, int offset, boolean descending) {
         if (limit < 1)
@@ -135,7 +147,9 @@ public class ProductDAO extends BaseDAO<Product> {
 
 
     public List<String> getAllCategories() {
-        String query = "SELECT DISTINCT Category FROM Product ORDER BY Category";
+        String query = "SELECT DISTINCT Category FROM product ORDER BY Category";
+        // We are using the ProductDAO's executeQuery which returns List<Product>,
+        // but we only care about the category field which is correctly mapped.
         List<Product> products = executeQuery(query);
         return products.stream().map(Product::getCategory).toList();
     }

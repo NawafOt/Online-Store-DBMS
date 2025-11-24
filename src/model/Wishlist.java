@@ -5,11 +5,6 @@ public class Wishlist {
     private int customerId;
     private int productId;
 
-    // For display purposes
-    private String customerName;
-    private String productName;
-    private double productPrice;
-
     public Wishlist() {
     }
 
@@ -35,36 +30,11 @@ public class Wishlist {
         this.productId = productId;
     }
 
-    public String getCustomerName() {
-        return customerName;
-    }
-
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
-    public double getProductPrice() {
-        return productPrice;
-    }
-
-    public void setProductPrice(double productPrice) {
-        this.productPrice = productPrice;
-    }
-
     @Override
     public String toString() {
         return "Wishlist{" +
                 "customerId=" + customerId +
                 ", productId=" + productId +
-                ", productName='" + productName + '\'' +
                 '}';
     }
 }
