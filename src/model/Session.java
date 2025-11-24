@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class Session {
 
     private static Session instance;
-    private static final ArrayList<Product> cartSelection = new ArrayList<>();
+    private final ArrayList<Product> cartSelection = new ArrayList<>();
 
     public enum UserRole {
         GUEST,
