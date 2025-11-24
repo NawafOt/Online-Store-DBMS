@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-
 public class OrderDAO extends BaseDAO<Order> {
 
     @Override
@@ -17,10 +16,11 @@ public class OrderDAO extends BaseDAO<Order> {
     protected Order mapResultSetToEntity(ResultSet rs) throws SQLException {
         Order order = new Order();
         order.setOid(rs.getInt("Oid"));
-        order.setStatus(rs.getString("Status"));
+        order.setStatus(Order.Status.valueOf(rs.getString("Status").toUpperCase()));
         order.setDate(rs.getDate("Date"));
         order.setCustomerId(rs.getInt("CustomerID"));
         order.setShippingId(rs.getInt("ShippingID"));
+        order.setShippingCost(rs.getDouble("ShippingCost"));
         try {
             order.setCustomerName(rs.getString("CustomerName"));
         } catch (SQLException e) {
@@ -31,27 +31,35 @@ public class OrderDAO extends BaseDAO<Order> {
 
     @Override
     public int insert(Order order) {
-        String query = "INSERT INTO `Order` (Status, Date, CustomerID, ShippingID) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO `Order` (Status, Date, CustomerID, ShippingID, ShippingCost) VALUES (?, ?, ?, ?, ?)";
         return executeInsertWithGeneratedKey(
                 query,
-                order.getStatus(),
+                order.getStatus().name(),
                 order.getDate(),
                 order.getCustomerId(),
-                order.getShippingId()
+                order.getShippingId(),
+                order.getShippingCost()
         );
     }
 
     @Override
     public boolean update(Order order) {
-        String query = "UPDATE `Order` SET Status = ?, Date = ?, CustomerID = ?, ShippingID = ? WHERE Oid = ?";
+        String query = "UPDATE `Order` SET Status = ?, Date = ?, CustomerID = ?, ShippingID = ?, ShippingCost = ? WHERE Oid = ?";
         int rowsAffected = executeUpdate(
                 query,
-                order.getStatus(),
+                order.getStatus().name(),
                 order.getDate(),
                 order.getCustomerId(),
                 order.getShippingId(),
+                order.getShippingCost(),
                 order.getOid()
         );
+        return rowsAffected > 0;
+    }
+
+    public boolean updateStatus(int oid, Order.Status newStatus) {
+        String query = "UPDATE `Order` SET Status = ? WHERE Oid = ?";
+        int rowsAffected = executeUpdate(query, newStatus.name(), oid);
         return rowsAffected > 0;
     }
 
@@ -66,7 +74,7 @@ public class OrderDAO extends BaseDAO<Order> {
     public Order getById(int oid) {
         String query = "SELECT * FROM `Order` WHERE Oid = ?";
         List<Order> results = executeQuery(query, oid);
-        return results.isEmpty() ? null : results.get(0);
+        return results.isEmpty() ? null : results.getFirst();
     }
 
     @Override
@@ -75,28 +83,20 @@ public class OrderDAO extends BaseDAO<Order> {
         return executeQuery(query);
     }
 
-
-
     public List<Order> getByCustomerId(int customerId) {
         String query = "SELECT * FROM `Order` WHERE CustomerID = ? ORDER BY Date DESC";
         return executeQuery(query, customerId);
     }
 
-
-
-    public List<Order> getByStatus(String status) {
+    public List<Order> getByStatus(Order.Status status) {
         String query = "SELECT * FROM `Order` WHERE Status = ?";
-        return executeQuery(query, status);
+        return executeQuery(query, status.name());
     }
-
-
 
     public List<Order> getByDateRange(java.sql.Date startDate, java.sql.Date endDate) {
         String query = "SELECT * FROM `Order` WHERE Date BETWEEN ? AND ?";
         return executeQuery(query, startDate, endDate);
     }
-
-
 
     public List<Order> getAllWithCustomerDetails() {
         String query = "SELECT o.*, c.Name as CustomerName " +
@@ -104,27 +104,5 @@ public class OrderDAO extends BaseDAO<Order> {
                 "JOIN Customer c ON o.CustomerID = c.Cid " +
                 "ORDER BY o.Date DESC";
         return executeQuery(query);
-    }
-
-
-
-    public boolean updateStatus(int oid, String newStatus) {
-        String query = "UPDATE `Order` SET Status = ? WHERE Oid = ?";
-        int rowsAffected = executeUpdate(query, newStatus, oid);
-        return rowsAffected > 0;
-    }
-
-
-
-    public List<Order> getRecentOrders(int limit) {
-        String query = "SELECT * FROM `Order` ORDER BY Date DESC LIMIT ?";
-        return executeQuery(query, limit);
-    }
-
-
-
-    public int countByCustomerId(int customerId) {
-        List<Order> orders = getByCustomerId(customerId);
-        return orders.size();
     }
 }

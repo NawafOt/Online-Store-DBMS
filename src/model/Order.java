@@ -2,34 +2,27 @@ package model;
 
 import java.sql.Date;
 
-
 public class Order {
+
+    public static enum Status {
+        PENDING,
+        SHIPPED,
+        DELIVERED,
+        CANCELLED
+    }
+
     private int oid;
-    private String status;
+    private Status status;
     private Date date;
     private int customerId;
     private int shippingId;
+    private double shippingCost;
 
-    // For display purposes (not stored in database)
+    // For display purposes
     private String customerName;
-    private String shippingCompanyName;
 
     public Order() {
-    }
-
-    public Order(int oid, String status, Date date, int customerId, int shippingId) {
-        this.oid = oid;
-        this.status = status;
-        this.date = date;
-        this.customerId = customerId;
-        this.shippingId = shippingId;
-    }
-
-    public Order(String status, Date date, int customerId, int shippingId) {
-        this.status = status;
-        this.date = date;
-        this.customerId = customerId;
-        this.shippingId = shippingId;
+        // Default
     }
 
     // Getters and Setters
@@ -41,11 +34,11 @@ public class Order {
         this.oid = oid;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
@@ -73,34 +66,19 @@ public class Order {
         this.shippingId = shippingId;
     }
 
+    public double getShippingCost() {
+        return shippingCost;
+    }
+
+    public void setShippingCost(double shippingCost) {
+        this.shippingCost = shippingCost;
+    }
+
     public String getCustomerName() {
         return customerName;
     }
 
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
-    }
-
-    public String getShippingCompanyName() {
-        return shippingCompanyName;
-    }
-
-    public void setShippingCompanyName(String shippingCompanyName) {
-        this.shippingCompanyName = shippingCompanyName;
-    }
-
-    @Override
-    public String toString() {
-        return "Order{" +
-                "oid=" + oid +
-                ", status='" + status + '\'' +
-                ", date=" + date +
-                ", customerId=" + customerId +
-                ", shippingId=" + shippingId +
-                '}';
-    }
-
-    public String getDisplayName() {
-        return "Order #" + oid + " - " + status + " (" + date + ")";
     }
 }
