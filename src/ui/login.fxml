@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<StackPane styleClass="background-container" stylesheets="@../../resources/styles/app.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.LoginPage">
+<StackPane styleClass="background-container" stylesheets="@/styles/app.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.LoginPage">
    <children>
       <AnchorPane maxHeight="400.0" maxWidth="600.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: transparent;">
           <children>
@@ -13,9 +13,10 @@
 
                       <VBox spacing="10.0">
                           <Label text="Phone Number or E-mail" />
-                          <TextField promptText="Enter Email/Phone" />
+                          <TextField fx:id="emailField" promptText="Enter Email/Phone" />
                           <Label text="Password" />
-                          <TextField promptText="Your Account Password" />
+                          <PasswordField fx:id="passwordField" promptText="Your Account Password" />
+                          <Label fx:id="errorLabel" styleClass="error-text" />
                       </VBox>
 
                       <Button mnemonicParsing="false" onAction="#handleContinue" prefWidth="100.0" styleClass="primary-btn" text="Continue" />
