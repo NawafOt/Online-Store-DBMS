@@ -64,7 +64,7 @@ public class DatabaseConfig {
             Class.forName(DB_DRIVER);
 
             isInitialized = true;
-            System.out.println("✓ Database configuration loaded successfully");
+            System.out.println("Database configuration loaded successfully");
 
             input.close();
 
@@ -116,23 +116,6 @@ public class DatabaseConfig {
             e.printStackTrace();
         }
         return false;
-    }
-
-    /**
-     * Closes a database connection safely.
-     *
-     * @param connection the connection to close
-     */
-    public static void closeConnection(Connection connection) {
-        if (connection != null) {
-            try {
-                connection.close();
-                System.out.println("Database connection closed");
-            } catch (SQLException e) {
-                System.err.println("Warning: Could not close connection properly");
-                e.printStackTrace();
-            }
-        }
     }
 
     /**
