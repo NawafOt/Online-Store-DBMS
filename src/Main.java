@@ -6,6 +6,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import ui.PageManager;
 
+import java.util.Objects;
 
 public class Main extends Application {
     @Override
@@ -13,13 +14,13 @@ public class Main extends Application {
 
         PageManager.initialize(primaryStage);
 
-        Parent root = FXMLLoader.load(getClass().getResource("/ui/login.fxml"));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/ui/login.fxml")));
         Scene scene = new Scene(root);
 
-        String css = getClass().getResource("/styles/app.css").toExternalForm();
+        String css = Objects.requireNonNull(getClass().getResource("/styles/app.css")).toExternalForm();
         scene.getStylesheets().add(css);
 
-        Image mainIcon = new Image(getClass().getResourceAsStream("/images/FreeSail-Icon.png"));
+        Image mainIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/FreeSail-Icon.png")));
 
         primaryStage.setTitle("Free Sail - Whatever, Whenever!");
         primaryStage.setScene(scene);
