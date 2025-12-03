@@ -5,7 +5,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
 <StackPane styleClass="background-container" stylesheets="@/styles/app.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.customer.pages.HomePage">
     <children>
@@ -13,63 +12,51 @@
             <children>
                 <VBox alignment="TOP_CENTER" spacing="15.0" styleClass="card" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="50.0">
                     <children>
+                        <!-- Top Bar -->
                         <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0">
                             <children>
-                                <Button fx:id="cartButton" onAction="#handleCart" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" text="Cart" textAlignment="CENTER">
+                                <Button fx:id="cartButton" onAction="#handleCart" contentDisplay="GRAPHIC_ONLY" prefHeight="30.0" styleClass="primary-btn, icon-button">
                                     <graphic>
-                                        <ImageView fx:id="iconCartView" fitHeight="32.0" fitWidth="32.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" />
+                                        <ImageView fx:id="iconCartView" fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" />
                                     </graphic>
-                                    <styleClass>
-                                        <String fx:value="primary-btn" />
-                                        <String fx:value="icon-button" />
-                                    </styleClass>
                                 </Button>
-                                <Region prefHeight="38.0" prefWidth="72.0" />
-                                <Label fx:id="welcomeLabel" alignment="CENTER" prefWidth="260.0" styleClass="title-text" text="Home" textAlignment="CENTER" />
-                                <Region layoutX="48.0" layoutY="10.0" prefHeight="38.0" prefWidth="72.0" />
-                                <Button fx:id="logoutButton" onAction="#handleLogout" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="1.0" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" text="Logout" textAlignment="CENTER">
+                                <Region HBox.hgrow="ALWAYS" />
+                                <Label fx:id="welcomeLabel" alignment="CENTER" styleClass="title-text" text="Home" />
+                                <Region HBox.hgrow="ALWAYS" />
+                                <Button fx:id="logoutButton" onAction="#handleLogout" contentDisplay="GRAPHIC_ONLY" styleClass="primary-btn, icon-button">
                                     <graphic>
-                                        <ImageView fx:id="iconLogoutView" fitHeight="32.0" fitWidth="32.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" />
+                                        <ImageView fx:id="iconLogoutView" fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" />
                                     </graphic>
-                                    <styleClass>
-                                        <String fx:value="primary-btn" />
-                                        <String fx:value="icon-button" />
-                                    </styleClass>
                                 </Button>
                             </children>
                         </HBox>
-                  <Region>
-                     <padding>
-                        <Insets bottom="10.0" top="10.0" />
-                     </padding>
-                  </Region>
-                  <HBox fx:id="customerButtons" alignment="CENTER" prefHeight="30.0" prefWidth="200.0">
-                     <children>
-                        <Button onAction="#handleWishList" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" styleClass="primary-btn" text="Wish List">
-                           <font>
-                              <Font size="16.0" />
-                           </font></Button>
-                        <Region prefHeight="30.0" prefWidth="60.0" />
-                        <Button onAction="#handleProfile" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="133.0" styleClass="primary-btn" text="Profile">
-                           <font>
-                              <Font size="16.0" />
-                           </font></Button>
-                        <Region layoutX="74.0" layoutY="10.0" prefHeight="30.0" prefWidth="60.0" />
-                        <Button onAction="#handleOrders" layoutX="74.0" layoutY="10.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" styleClass="primary-btn" text="Orders">
-                           <font>
-                              <Font size="16.0" />
-                           </font></Button>
-                     </children>
-                  </HBox>
-                  <Separator prefWidth="200.0" scaleY="1.5">
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                     <padding>
-                        <Insets bottom="10.0" top="10.0" />
-                     </padding>
-                  </Separator>
-                  <Accordion fx:id="categoryAccordion" />
+
+                        <!-- Navigation Buttons -->
+                        <HBox fx:id="customerButtons" alignment="CENTER" spacing="20.0">
+                            <children>
+                                <Button onAction="#handleWishList" prefWidth="120.0" styleClass="primary-btn" text="Wish List" />
+                                <Button onAction="#handleProfile" prefWidth="120.0" styleClass="primary-btn" text="Profile" />
+                                <Button onAction="#handleOrders" prefWidth="120.0" styleClass="primary-btn" text="Orders" />
+                            </children>
+                        </HBox>
+
+                        <Separator prefWidth="200.0" />
+
+                        <!-- NEW: Search Bar -->
+                        <HBox alignment="CENTER" spacing="10.0">
+                            <TextField fx:id="searchField" promptText="Search products..." prefWidth="300.0" />
+                            <Button text="Search" onAction="#handleSearch" styleClass="primary-btn"/>
+                            <Button text="Clear" onAction="#handleClearSearch" styleClass="secondary-btn"/>
+                            <ProgressIndicator fx:id="loadingSpinner" prefHeight="25.0" prefWidth="25.0" visible="false"/>
+                        </HBox>
+
+                        <!-- Content Area: StackPane to swap between Accordion and Search Results -->
+                        <StackPane VBox.vgrow="ALWAYS">
+                            <Accordion fx:id="categoryAccordion" />
+                            <ListView fx:id="searchResultsList" visible="false" styleClass="list-view"/>
+                            <Label fx:id="noResultsLabel" text="No products found." visible="false" styleClass="muted"/>
+                        </StackPane>
+
                     </children>
                 </VBox>
             </children>
