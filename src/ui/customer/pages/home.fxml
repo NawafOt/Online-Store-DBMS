@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
+<?import java.lang.String?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<StackPane styleClass="background-container" stylesheets="@../../../../resources/styles/app.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.customer.pages.HomePage">
+<StackPane styleClass="background-container" stylesheets="@/styles/app.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.customer.pages.HomePage">
     <children>
-        <AnchorPane maxHeight="400.0" maxWidth="600.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: transparent;" styleClass="root">
+        <AnchorPane prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: transparent;" styleClass="root">
             <children>
                 <VBox alignment="TOP_CENTER" spacing="15.0" styleClass="card" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="50.0">
                     <children>
                         <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0">
                             <children>
-                                <Button alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleCart" prefHeight="30.0" text="EXIT" textAlignment="CENTER">
+                                <Button fx:id="cartButton" onAction="#handleCart" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" text="Cart" textAlignment="CENTER">
                                     <graphic>
-                                        <ImageView fx:id="iconCartView" fitHeight="32.0" fitWidth="32.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
-                                        </ImageView>
+                                        <ImageView fx:id="iconCartView" fitHeight="32.0" fitWidth="32.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" />
                                     </graphic>
                                     <styleClass>
                                         <String fx:value="primary-btn" />
@@ -26,12 +25,11 @@
                                     </styleClass>
                                 </Button>
                                 <Region prefHeight="38.0" prefWidth="72.0" />
-                                <Label alignment="CENTER" prefWidth="260.0" styleClass="title-text" text="Home" textAlignment="CENTER" />
+                                <Label fx:id="welcomeLabel" alignment="CENTER" prefWidth="260.0" styleClass="title-text" text="Home" textAlignment="CENTER" />
                                 <Region layoutX="48.0" layoutY="10.0" prefHeight="38.0" prefWidth="72.0" />
-                                <Button alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="1.0" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#handleLogout" text="EXIT" textAlignment="CENTER">
+                                <Button fx:id="logoutButton" onAction="#handleLogout" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="1.0" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" text="Logout" textAlignment="CENTER">
                                     <graphic>
-                                        <ImageView fx:id="iconLogoutView" fitHeight="32.0" fitWidth="32.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
-                                        </ImageView>
+                                        <ImageView fx:id="iconLogoutView" fitHeight="32.0" fitWidth="32.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" />
                                     </graphic>
                                     <styleClass>
                                         <String fx:value="primary-btn" />
@@ -45,19 +43,19 @@
                         <Insets bottom="10.0" top="10.0" />
                      </padding>
                   </Region>
-                  <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0">
+                  <HBox fx:id="customerButtons" alignment="CENTER" prefHeight="30.0" prefWidth="200.0">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#handleWishList" prefHeight="30.0" prefWidth="120.0" styleClass="primary-btn" text="Wish List">
+                        <Button onAction="#handleWishList" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" styleClass="primary-btn" text="Wish List">
                            <font>
                               <Font size="16.0" />
                            </font></Button>
                         <Region prefHeight="30.0" prefWidth="60.0" />
-                        <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onMouseClicked="#handleProfile" prefHeight="35.0" prefWidth="133.0" styleClass="primary-btn" text="Profile">
+                        <Button onAction="#handleProfile" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="133.0" styleClass="primary-btn" text="Profile">
                            <font>
                               <Font size="16.0" />
                            </font></Button>
                         <Region layoutX="74.0" layoutY="10.0" prefHeight="30.0" prefWidth="60.0" />
-                        <Button layoutX="74.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleOrders" prefHeight="30.0" prefWidth="120.0" styleClass="primary-btn" text="Orders">
+                        <Button onAction="#handleOrders" layoutX="74.0" layoutY="10.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="120.0" styleClass="primary-btn" text="Orders">
                            <font>
                               <Font size="16.0" />
                            </font></Button>
@@ -71,7 +69,7 @@
                         <Insets bottom="10.0" top="10.0" />
                      </padding>
                   </Separator>
-                  <ListView orientation="HORIZONTAL" styleClass="muted" />
+                  <Accordion fx:id="categoryAccordion" />
                     </children>
                 </VBox>
             </children>

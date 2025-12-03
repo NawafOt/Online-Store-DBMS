@@ -5,30 +5,31 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
 
-<StackPane styleClass="background-container" stylesheets="@../../../../resources/styles/app.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.customer.pages.CartPage">
+<StackPane styleClass="background-container" stylesheets="@/styles/app.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.customer.pages.CartPage">
     <children>
-        <AnchorPane maxHeight="400.0" maxWidth="600.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: transparent;" styleClass="root">
+        <AnchorPane prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: transparent;" styleClass="root">
             <children>
                 <VBox alignment="TOP_CENTER" spacing="15.0" styleClass="card" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="50.0">
                     <children>
-                        <HBox>
+                        <HBox alignment="CENTER_LEFT">
                             <children>
-                                <Button alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#handleBack" text="EXIT" textAlignment="CENTER">
+                                <Button alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="1.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#handleBack" text="Back" textAlignment="CENTER">
                                     <graphic>
-                                        <ImageView fx:id="iconReturn" fitHeight="30" fitWidth="30" pickOnBounds="true" preserveRatio="true">
-                                        </ImageView>
+                                        <ImageView fx:id="iconReturn" fitHeight="30" fitWidth="30" pickOnBounds="true" preserveRatio="true" />
                                     </graphic>
                                     <styleClass>
                                         <String fx:value="primary-btn" />
                                         <String fx:value="icon-button" />
                                     </styleClass>
                                 </Button>
-                                <Region prefHeight="38.0" prefWidth="72.0" />
-                                <Label alignment="CENTER" prefHeight="35.0" prefWidth="260.0" styleClass="title-text" text="Shopping Cart" textAlignment="CENTER" />
+                                <Region HBox.hgrow="ALWAYS" />
+                                <Label alignment="CENTER" styleClass="title-text" text="My Shopping Cart" />
+                                <Region HBox.hgrow="ALWAYS" />
                             </children>
                         </HBox>
-                        <ScrollPane fx:id="scrollPane" fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+                        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
                             <content>
                                 <VBox fx:id="cardContainer" alignment="TOP_CENTER" spacing="12">
                                     <padding>
@@ -37,13 +38,17 @@
                                 </VBox>
                             </content>
                         </ScrollPane>
-                  <HBox alignment="CENTER" prefHeight="50.0">
-                     <children>
-                        <Button alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefWidth="100.0" styleClass="primary-btn" text="Clear All" />
-                        <Region prefHeight="50.0" prefWidth="194.0" />
-                        <Button alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefWidth="100.0" styleClass="primary-btn" text="Checkout" />
-                     </children>
-                  </HBox>
+                        <Separator />
+                        <HBox alignment="CENTER_RIGHT" prefHeight="50.0" spacing="20.0">
+                            <children>
+                                <Label fx:id="totalLabel" style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Total: \$0.00" />
+                                <Button fx:id="clearAllButton" onAction="#handleClearAll" prefWidth="100.0" styleClass="danger-btn" text="Clear All" />
+                                <Button fx:id="checkoutButton" onAction="#handleCheckout" prefWidth="100.0" styleClass="primary-btn" text="Checkout" />
+                            </children>
+                            <padding>
+                                <Insets right="20.0" />
+                            </padding>
+                        </HBox>
                     </children>
                 </VBox>
             </children>

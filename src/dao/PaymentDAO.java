@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-
 public class PaymentDAO extends BaseDAO<Payment> {
 
     @Override
@@ -17,41 +16,49 @@ public class PaymentDAO extends BaseDAO<Payment> {
     protected Payment mapResultSetToEntity(ResultSet rs) throws SQLException {
         Payment payment = new Payment();
         payment.setOrderId(rs.getInt("OrderID"));
-        payment.setMethod(rs.getString("Method"));
-        payment.setStatus(rs.getString("Status"));
+        payment.setMethod(Payment.Method.valueOf(rs.getString("Method").toUpperCase()));
+        payment.setStatus(Payment.Status.valueOf(rs.getString("Status").toUpperCase()));
         payment.setCustomerId(rs.getInt("CustomerID"));
+        payment.setTotalAmount(rs.getDouble("TotalAmount"));
         try {
             payment.setCustomerName(rs.getString("CustomerName"));
         } catch (SQLException e) {
             // Column doesn't exist, that's okay
         }
-
         return payment;
     }
 
     @Override
     public int insert(Payment payment) {
-        String query = "INSERT INTO Payment (OrderID, Method, Status, CustomerID) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO Payment (OrderID, Method, Status, CustomerID, TotalAmount) VALUES (?, ?, ?, ?, ?)";
         int rowsAffected = executeUpdate(
                 query,
                 payment.getOrderId(),
-                payment.getMethod(),
-                payment.getStatus(),
-                payment.getCustomerId()
+                payment.getMethod().name(),
+                payment.getStatus().name(),
+                payment.getCustomerId(),
+                payment.getTotalAmount()
         );
         return rowsAffected > 0 ? payment.getOrderId() : -1;
     }
 
     @Override
     public boolean update(Payment payment) {
-        String query = "UPDATE Payment SET Method = ?, Status = ?, CustomerID = ? WHERE OrderID = ?";
+        String query = "UPDATE Payment SET Method = ?, Status = ?, CustomerID = ?, TotalAmount = ? WHERE OrderID = ?";
         int rowsAffected = executeUpdate(
                 query,
-                payment.getMethod(),
-                payment.getStatus(),
+                payment.getMethod().name(),
+                payment.getStatus().name(),
                 payment.getCustomerId(),
+                payment.getTotalAmount(),
                 payment.getOrderId()
         );
+        return rowsAffected > 0;
+    }
+
+    public boolean updateStatus(int orderId, Payment.Status newStatus) {
+        String query = "UPDATE Payment SET Status = ? WHERE OrderID = ?";
+        int rowsAffected = executeUpdate(query, newStatus.name(), orderId);
         return rowsAffected > 0;
     }
 
@@ -75,63 +82,18 @@ public class PaymentDAO extends BaseDAO<Payment> {
         return executeQuery(query);
     }
 
-
     public List<Payment> getByCustomerId(int customerId) {
         String query = "SELECT * FROM Payment WHERE CustomerID = ?";
         return executeQuery(query, customerId);
     }
 
-
-    public List<Payment> getByStatus(String status) {
+    public List<Payment> getByStatus(Payment.Status status) {
         String query = "SELECT * FROM Payment WHERE Status = ?";
-        return executeQuery(query, status);
+        return executeQuery(query, status.name());
     }
 
-
-    public List<Payment> getByMethod(String method) {
+    public List<Payment> getByMethod(Payment.Method method) {
         String query = "SELECT * FROM Payment WHERE Method = ?";
-        return executeQuery(query, method);
-    }
-
-
-    public boolean updateStatus(int orderId, String newStatus) {
-        String query = "UPDATE Payment SET Status = ? WHERE OrderID = ?";
-        int rowsAffected = executeUpdate(query, newStatus, orderId);
-        return rowsAffected > 0;
-    }
-
-
-    public List<Payment> getAllWithCustomerDetails() {
-        String query = "SELECT p.*, c.Name as CustomerName " +
-                "FROM Payment p " +
-                "JOIN Customer c ON p.CustomerID = c.Cid";
-        return executeQuery(query);
-    }
-
-
-    public List<Payment> getPendingPayments() {
-        return getByStatus("Pending");
-    }
-
-
-    public List<Payment> getCompletedPayments() {
-        return getByStatus("Completed");
-    }
-
-
-    public boolean existsForOrder(int orderId) {
-        Payment payment = getById(orderId);
-        return payment != null;
-    }
-
-
-    public Payment getPaymentWithFullDetails(int orderId) {
-        String query = "SELECT p.*, c.Name as CustomerName, o.Date, o.Status as OrderStatus " +
-                "FROM Payment p " +
-                "JOIN Customer c ON p.CustomerID = c.Cid " +
-                "JOIN `Order` o ON p.OrderID = o.Oid " +
-                "WHERE p.OrderID = ?";
-        List<Payment> results = executeQuery(query, orderId);
-        return results.isEmpty() ? null : results.getFirst();
+        return executeQuery(query, method.name());
     }
 }

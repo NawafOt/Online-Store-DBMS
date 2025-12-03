@@ -1,10 +1,24 @@
 package model;
 
 public class Payment {
+
+    public static enum Status {
+        PENDING,
+        PAID,
+        FAILED
+    }
+
+    public static enum Method {
+        CREDIT_CARD,
+        BANK_TRANSFER,
+        CASH
+    }
+
     private int orderId;
-    private String method;
-    private String status;
+    private Method method;
+    private Status status;
     private int customerId;
+    private double totalAmount;
 
     // For display purposes
     private String customerName;
@@ -12,11 +26,12 @@ public class Payment {
     public Payment() {
     }
 
-    public Payment(int orderId, String method, String status, int customerId) {
+    public Payment(int orderId, Method method, Status status, int customerId, double totalAmount) {
         this.orderId = orderId;
         this.method = method;
         this.status = status;
         this.customerId = customerId;
+        this.totalAmount = totalAmount;
     }
 
     // Getters and Setters
@@ -28,19 +43,19 @@ public class Payment {
         this.orderId = orderId;
     }
 
-    public String getMethod() {
+    public Method getMethod() {
         return method;
     }
 
-    public void setMethod(String method) {
+    public void setMethod(Method method) {
         this.method = method;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
@@ -52,25 +67,19 @@ public class Payment {
         this.customerId = customerId;
     }
 
+    public double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
     public String getCustomerName() {
         return customerName;
     }
 
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
-    }
-
-    @Override
-    public String toString() {
-        return "Payment{" +
-                "orderId=" + orderId +
-                ", method='" + method + '\'' +
-                ", status='" + status + '\'' +
-                ", customerId=" + customerId +
-                '}';
-    }
-
-    public String getDisplayName() {
-        return "Payment for Order #" + orderId + " - " + method + " (" + status + ")";
     }
 }

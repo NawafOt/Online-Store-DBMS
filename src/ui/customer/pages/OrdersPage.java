@@ -1,104 +1,95 @@
 package ui.customer.pages;
 
 import dao.OrderDAO;
+import dao.OrderProductDAO;
+import dao.PaymentDAO;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Accordion;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
 import model.Order;
+import model.OrderProduct;
+import model.Payment;
 import model.Session;
-import ui.commons.CardAction;
-import ui.commons.CardController;
 import ui.PageManager;
 
-import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
-
 import java.util.Objects;
 
 /**
- * Controller for displaying a customer's list of orders.
- *
- * <p>Populates a scrollable list of order cards; each card can expose
- * actions such as viewing details.</p>
+ * Controller for displaying a customer's order history.
+ * Each order is displayed in a collapsible TitledPane within an Accordion.
  */
 public class OrdersPage {
-    @FXML private ImageView iconReturn;
-    @FXML private ScrollPane scrollPane;
-    @FXML private VBox cardContainer;
-    private final ArrayList<Order> orderList = new ArrayList<>();
-    private final OrderDAO orderDAO = new OrderDAO();
-    private final int customerID = Session.getInstance().getCustomerId();
 
+    @FXML
+    private ImageView iconReturn;
+    @FXML
+    private Accordion ordersAccordion;
+
+    private final OrderDAO orderDAO = new OrderDAO();
+    private final OrderProductDAO orderProductDAO = new OrderProductDAO();
+    private final PaymentDAO paymentDAO = new PaymentDAO();
+    private final int customerId = Session.getInstance().getCustomerId();
 
     /**
-     * FXML initialization: loads icons and sample orders and populates the UI.
+     * FXML initialization: loads icons and populates the orders view.
      */
     @FXML
     public void initialize() {
         loadImages();
-        orderList.add(new Order(10, "PENDING", Date.valueOf("2020-1-2"), 2, 30));
-        orderList.add(new Order(10, "SHIPPED", Date.valueOf("2023-6-20"), 2, 30));
-        orderList.add(new Order(10, "CANCELLED", Date.valueOf("2077-3-10"), 2, 30));
-        orderList.add(new Order(73, "DELIVERED", Date.valueOf("2019-8-30"), 1337, 10));
-
-        //TODO UNCOMMENT THIS IF CONNECTION IS ESTABLISHED
-        //orderList.addAll(orderDAO.getByCustomerId(customerID)); //just add all the damn elements
-
-        Function<Order, String[]> orderMap = getOrderFunction();
-
-        for (Order order: orderList)
-            addCardForOrder(order, orderMap);
-
+        loadCustomerOrders();
     }
 
     /**
-     * Create a mapper from Order to the strings used on the card.
-     *
-     * @return function mapping Order to {title, date, status}
+     * Fetches and displays the customer's orders in an accordion view.
      */
-    private Function<Order, String[]> getOrderFunction() {
-        return order -> new String[]{
-                "Order ID: " + String.format("%d", order.getOid()),
-                "Date: " + order.getDate().toString(),
-                order.getStatus()
-        };
-    }
+    private void loadCustomerOrders() {
+        // Get all orders for the current customer.
+        List<Order> orders = orderDAO.getByCustomerId(customerId);
 
-    /**
-     * Create and insert a card node for the specified order.
-     *
-     * @param order  order to display
-     * @param mapper mapper used to generate display strings
-     */
-    private void addCardForOrder(Order order, Function<Order, String[]> mapper) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/commons/Card.fxml"));
-            Node cardNode = loader.load(); //card nodes we will insert tinto the scroll pane
-            CardController<Order> controller = loader.getController();
+        if (orders.isEmpty()) {
+            ordersAccordion.getPanes().add(new TitledPane("No Orders Found", new Label("You have not placed any orders yet.")));
+            return;
+        }
 
-            // define view detail for this card type.
-            List<CardAction> actions = List.of(
-                    new CardAction("View Order Details", () -> {
-                        //TODO ADD LOGIC PLEASE!!!!!
-                    })
-            );
-
-            // initial fill
-            controller.setData(order, mapper, actions);
-
-            cardContainer.getChildren().add(cardNode);
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        for (Order order : orders) {
+            // For each order, create a TitledPane.
+            TitledPane pane = createOrderPane(order);
+            ordersAccordion.getPanes().add(pane);
         }
     }
 
+    /**
+     * Creates a TitledPane for a single order, including its details and the products it contains.
+     * @param order The order to display.
+     * @return A TitledPane ready to be added to the Accordion.
+     */
+    private TitledPane createOrderPane(Order order) {
+        // Fetch the payment record to get the historically accurate grand total.
+        Payment payment = paymentDAO.getById(order.getOid());
+        double grandTotal = (payment != null) ? payment.getTotalAmount() : 0.0;
+
+        // Create the title for the pane with summary information.
+        String title = String.format("Order #%d  |  Date: %s  |  Status: %s  |  Total: $%.2f",
+                order.getOid(), order.getDate().toString(), order.getStatus(), grandTotal);
+
+        // Get the list of products for this order.
+        List<OrderProduct> productsInOrder = orderProductDAO.getByOrderIdWithDetails(order.getOid());
+
+        // Create a ListView to display the products.
+        ListView<String> productListView = new ListView<>();
+        for (OrderProduct op : productsInOrder) {
+            String productInfo = String.format("%s (x%d) - $%.2f each",
+                    op.getProductName(), op.getQuantity(), op.getPriceAtPurchase());
+            productListView.getItems().add(productInfo);
+        }
+
+        return new TitledPane(title, productListView);
+    }
 
     /**
      * Load small page icons and set them on the corresponding ImageView.
@@ -109,9 +100,9 @@ public class OrdersPage {
             iconReturn.setImage(returnIcon);
         } catch (Exception e) {
             System.err.println("Failed to load icon: " + e.getMessage());
+            e.printStackTrace();
         }
     }
-
 
     /**
      * Navigate back to the customer home page.
