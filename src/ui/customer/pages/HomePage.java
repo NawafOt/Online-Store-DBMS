@@ -3,6 +3,7 @@ package ui.customer.pages;
 import dao.ProductDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -22,16 +23,16 @@ import java.util.Objects;
  */
 public class HomePage {
 
-    @FXML
-    private ImageView iconLogoutView;
-    @FXML
-    private ImageView iconCartView;
-    @FXML
-    private Label welcomeLabel;
-    @FXML
-    private Button logoutButton;
-    @FXML
-    private Accordion categoryAccordion;
+    @FXML private ImageView iconLogoutView;
+    @FXML private ImageView iconCartView;
+    @FXML private Label welcomeLabel;
+    @FXML private Button logoutButton;
+
+    @FXML private Accordion categoryAccordion;
+    @FXML private TextField searchField;
+    @FXML private ListView<Product> searchResultsList;
+    @FXML private Label noResultsLabel;
+    @FXML private ProgressIndicator loadingSpinner;
 
     private final ProductDAO productDAO = new ProductDAO();
     private final Session session = Session.getInstance();
@@ -45,6 +46,101 @@ public class HomePage {
         loadImages();
         setupUserSession();
         loadProductsByCategory();
+
+        searchResultsList.setCellFactory(createProductCellFactory());
+        searchResultsList.getSelectionModel().selectedItemProperty().addListener((obs, old, newVal) -> {
+            if (newVal != null) PageManager.loadPage("customer/pages/product_details.fxml", newVal);
+        });
+
+        // Load initial data (Async)
+        loadProductsAsync();
+    }
+
+    /**
+     * ASYNC LOADING: Fetches categories and products on a background thread
+     * so the UI doesn't freeze.
+     */
+    private void loadProductsAsync() {
+        loadingSpinner.setVisible(true);
+        categoryAccordion.setVisible(false);
+
+        Task<List<String>> task = new Task<>() {
+            @Override
+            protected List<String> call() {
+                // Database call happens here (Background Thread)
+                return productDAO.getAllCategories();
+            }
+        };
+
+        task.setOnSucceeded(event -> {
+            // UI Update happens here (JavaFX Thread)
+            List<String> categories = task.getValue();
+            populateAccordion(categories);
+            loadingSpinner.setVisible(false);
+            categoryAccordion.setVisible(true);
+        });
+
+        task.setOnFailed(event -> {
+            loadingSpinner.setVisible(false);
+            System.err.println("Failed to load categories.");
+        });
+
+        new Thread(task).start();
+    }
+
+    private void populateAccordion(List<String> categories) {
+        categoryAccordion.getPanes().clear();
+        for (String category : categories) {
+            List<Product> products = productDAO.getByCategory(category);
+            ListView<Product> lv = new ListView<>(FXCollections.observableArrayList(products));
+            lv.setCellFactory(createProductCellFactory());
+            lv.getSelectionModel().selectedItemProperty().addListener((obs, old, newVal) -> {
+                if (newVal != null) PageManager.loadPage("customer/pages/product_details.fxml", newVal);
+            });
+            categoryAccordion.getPanes().add(new TitledPane(category, lv));
+        }
+    }
+
+    @FXML
+    private void handleSearch() {
+        String query = searchField.getText().trim();
+        if (query.isEmpty()) {
+            handleClearSearch();
+            return;
+        }
+
+        loadingSpinner.setVisible(true);
+        categoryAccordion.setVisible(false);
+        searchResultsList.setVisible(false);
+        noResultsLabel.setVisible(false);
+
+        Task<List<Product>> searchTask = new Task<>() {
+            @Override
+            protected List<Product> call() {
+                return productDAO.searchByName(query);
+            }
+        };
+
+        searchTask.setOnSucceeded(e -> {
+            loadingSpinner.setVisible(false);
+            List<Product> results = searchTask.getValue();
+            if (results.isEmpty()) {
+                noResultsLabel.setVisible(true);
+            } else {
+                searchResultsList.setItems(FXCollections.observableArrayList(results));
+                searchResultsList.setVisible(true);
+            }
+        });
+
+        new Thread(searchTask).start();
+    }
+
+    @FXML
+    private void handleClearSearch() {
+        searchField.clear();
+        searchResultsList.setVisible(false);
+        noResultsLabel.setVisible(false);
+        categoryAccordion.setVisible(true);
     }
 
     /**

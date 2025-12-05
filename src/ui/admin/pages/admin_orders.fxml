@@ -1,14 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="ui.admin.pages.OrderManagementPage"
-            prefHeight="400.0" prefWidth="600.0">
+<StackPane styleClass="background-container" stylesheets="@/styles/app.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.admin.pages.OrderManagementPage">
+    <children>
+        <AnchorPane prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: transparent;">
+            <children>
+                <VBox spacing="15.0" styleClass="card" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="30.0">
+                    <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                    </padding>
+                    <children>
+                        <!-- Header -->
+                        <HBox alignment="CENTER_LEFT" spacing="15.0">
+                            <Button mnemonicParsing="false" onAction="#handleBack" styleClass="secondary-btn" text="← Back" />
+                            <Label styleClass="title-text" text="Order Management">
+                                <font>
+                                    <Font size="24.0" />
+                                </font>
+                            </Label>
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Label text="Filter Status: " />
+                            <ComboBox fx:id="filterCombo" onAction="#handleFilter" prefWidth="150.0" promptText="All" />
+                        </HBox>
 
-</AnchorPane>
+                        <Separator />
+
+                        <!-- Main Table -->
+                        <TableView fx:id="orderTable" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colOid" prefWidth="80.0" text="Order ID" />
+                                <TableColumn fx:id="colCustomer" prefWidth="200.0" text="Customer Name" />
+                                <TableColumn fx:id="colDate" prefWidth="150.0" text="Date Placed" />
+                                <TableColumn fx:id="colShippingCost" prefWidth="120.0" text="Shipping Cost" />
+                                <TableColumn fx:id="colStatus" prefWidth="150.0" text="Current Status" />
+                            </columns>
+                            <placeholder>
+                                <Label text="No orders found" />
+                            </placeholder>
+                        </TableView>
+
+                        <!-- Controls -->
+                        <HBox alignment="CENTER_LEFT" spacing="15.0" style="-fx-background-color: #f4f4f4; -fx-background-radius: 6;">
+                            <padding>
+                                <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
+                            </padding>
+                            <children>
+                                <Label style="-fx-font-weight: bold;" text="Update Selected Order:" />
+                                <ComboBox fx:id="statusCombo" prefWidth="180.0" promptText="Select New Status" />
+                                <Button mnemonicParsing="false" onAction="#handleUpdateStatus" styleClass="primary-btn" text="Save Status Change" />
+                                <Region HBox.hgrow="ALWAYS" />
+                                <Label fx:id="statusLabel" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </children>
+        </AnchorPane>
+    </children>
+</StackPane>

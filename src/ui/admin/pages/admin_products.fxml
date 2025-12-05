@@ -1,14 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="ui.admin.pages.ProductManagementPage"
-            prefHeight="400.0" prefWidth="600.0">
+<StackPane styleClass="background-container" stylesheets="@/styles/app.css"
+           xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="ui.admin.pages.ProductManagementPage">
+    <children>
+    <AnchorPane prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: transparent;">
+        <children>
+        <VBox spacing="15.0" styleClass="card"
+              AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0"
+              AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="30.0">
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+            </padding>
+            <children>
+            <!-- Header -->
+            <HBox alignment="CENTER_LEFT" spacing="15.0">
+                <Button mnemonicParsing="false" onAction="#handleBack"
+                        styleClass="primary-btn" text="← Back"/>
+                <Label styleClass="title-text" text="Product Management">
+                    <font>
+                        <Font size="24.0"/>
+                    </font>
+                </Label>
+                <Region HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="searchField" promptText="Search by name..." prefWidth="200.0"/>
+                <Button mnemonicParsing="false" onAction="#handleSearch"
+                        styleClass="primary-btn" text="Search"/>
+            </HBox>
 
-</AnchorPane>
+            <Separator/>
+
+            <!-- Main Content: Form + Table -->
+            <HBox spacing="20.0" VBox.vgrow="ALWAYS">
+                <!-- Left: Form -->
+                <VBox spacing="12.0" prefWidth="300.0">
+                    <Label styleClass="accent" text="Product Details"/>
+
+                    <VBox spacing="5.0">
+                        <Label text="Name"/>
+                        <TextField fx:id="nameField" promptText="Product name"/>
+                    </VBox>
+
+                    <VBox spacing="5.0">
+                        <Label text="Unit Price"/>
+                        <TextField fx:id="priceField" promptText="0.00"/>
+                    </VBox>
+
+                    <VBox spacing="5.0">
+                        <Label text="Category"/>
+                        <TextField fx:id="categoryField" promptText="Category"/>
+                    </VBox>
+
+                    <VBox spacing="5.0">
+                        <Label text="Stock"/>
+                        <TextField fx:id="stockField" promptText="0"/>
+                    </VBox>
+
+                    <Region prefHeight="10.0"/>
+
+                    <HBox spacing="10.0" alignment="CENTER">
+                        <Button mnemonicParsing="false" onAction="#handleAdd"
+                                prefWidth="80.0" styleClass="primary-btn" text="Add"/>
+                        <Button mnemonicParsing="false" onAction="#handleUpdate"
+                                prefWidth="80.0" styleClass="primary-btn" text="Update"/>
+                        <Button mnemonicParsing="false" onAction="#handleDelete"
+                                prefWidth="80.0" styleClass="primary-btn" text="Delete"/>
+                    </HBox>
+
+                    <Button mnemonicParsing="false" onAction="#handleClear"
+                            prefWidth="260.0" styleClass="secondary-btn" text="Clear / Reset"/>
+
+                    <Label fx:id="statusLabel" wrapText="true"/>
+                </VBox>
+
+                <!-- Right: Table -->
+                <TableView fx:id="productTable" HBox.hgrow="ALWAYS">
+                    <columns>
+                    <TableColumn fx:id="colId" text="ID" prefWidth="60"/>
+                    <TableColumn fx:id="colName" text="Name" prefWidth="180"/>
+                    <TableColumn fx:id="colPrice" text="Price" prefWidth="100"/>
+                    <TableColumn fx:id="colCategory" text="Category" prefWidth="150"/>
+                    <TableColumn fx:id="colStock" text="Stock" prefWidth="80"/>
+                </columns>
+                <placeholder>
+                    <Label text="No products found"/>
+                </placeholder>
+            </TableView>
+        </HBox>
+    </children>
+</VBox>
+        </children>
+        </AnchorPane>
+        </children>
+        </StackPane>

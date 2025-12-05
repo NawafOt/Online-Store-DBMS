@@ -1,8 +1,12 @@
 package dao;
 
 import model.Product;
+
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -147,10 +151,29 @@ public class ProductDAO extends BaseDAO<Product> {
 
 
     public List<String> getAllCategories() {
-        String query = "SELECT DISTINCT Category FROM product ORDER BY Category";
-        // We are using the ProductDAO's executeQuery which returns List<Product>,
-        // but we only care about the category field which is correctly mapped.
-        List<Product> products = executeQuery(query);
-        return products.stream().map(Product::getCategory).toList();
+        List<String> categories = new ArrayList<>();
+        String query = "SELECT DISTINCT Category FROM Product ORDER BY Category";
+
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = getConnection();
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                String categoryName = rs.getString("Category");
+                categories.add(categoryName);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(conn, stmt, rs);
+        }
+
+        return categories;
     }
 }

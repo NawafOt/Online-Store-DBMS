@@ -160,3 +160,143 @@
     -fx-padding: 0;
     -fx-pref-height: 0;
 }
+
+<!-- Table view styling -->
+.table-view {
+    -fx-background-color: white;
+    -fx-border-color: #D0DDE6;
+    -fx-border-radius: 6;
+    -fx-padding: 0;
+}
+
+.table-view > .column-header-background {
+    -fx-background-color: #263743;
+    -fx-background-radius: 6 6 0 0;
+}
+
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: 600;
+    -fx-font-size: 13px;
+    -fx-alignment: center-left;
+}
+
+/* Rows */
+.table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #F0F4F8 transparent;
+    -fx-cell-size: 40px;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #FAFCFE;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #EAFBFF;
+    -fx-text-fill: #263743;
+}
+
+.table-row-cell:selected .text {
+    -fx-fill: #263743;
+}
+
+/* Scrollbar in Table */
+.table-view .scroll-bar:horizontal .track,
+.table-view .scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+}
+
+/*----------------------------------------------------------*/
+
+<!-- Button interactions -->
+.secondary-btn {
+    -fx-background-color: #D0DDE6;
+    -fx-text-fill: #263743;
+    -fx-padding: 8 14;
+    -fx-background-radius: 6;
+    -fx-font-weight: 600;
+}
+
+.secondary-btn:hover {
+    -fx-background-color: #B0C4D3;
+}
+
+.danger-btn {
+    -fx-background-color: #E53935;
+    -fx-text-fill: white;
+    -fx-padding: 8 14;
+    -fx-background-radius: 6;
+    -fx-font-weight: 600;
+}
+
+.danger-btn:hover {
+    -fx-background-color: #C62828;
+}
+
+/* ---------------------------------------------------------- */
+
+<!-- Accordion & TitledPane Styling -->
+.accordion {
+    -fx-background-color: transparent;
+}
+
+/* The TitledPane container */
+.titled-pane {
+    -fx-text-fill: #263743;
+    -fx-background-color: transparent;
+    -fx-animated: true;
+}
+
+/* The Title Header Area (Collapsed State) */
+.titled-pane > .title {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #D0DDE6;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-padding: 10 15;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.03), 2, 0, 0, 1);
+}
+
+/* Hover effect on the header */
+.titled-pane > .title:hover {
+    -fx-background-color: #EAFBFF;
+    -fx-cursor: hand;
+}
+
+/* The Title Header Area (Expanded/Active State) */
+.titled-pane:expanded > .title {
+    -fx-background-color: #263743;
+    -fx-text-fill: white;
+    -fx-border-color: #263743;
+    -fx-background-radius: 6 6 0 0;
+    -fx-border-radius: 6 6 0 0;
+}
+
+/* The Content Area inside the pane */
+.titled-pane > .content {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #D0DDE6;
+    -fx-border-width: 0 1 1 1;
+    -fx-background-radius: 0 0 6 6;
+    -fx-border-radius: 0 0 6 6;
+    -fx-padding: 10;
+}
+
+/* The Arrow Icon (Collapsed) */
+.titled-pane > .title > .arrow-button .arrow {
+    -fx-background-color: #263743; /* Dark arrow */
+    -fx-padding: 3;
+}
+
+/* The Arrow Icon (Expanded) */
+.titled-pane:expanded > .title > .arrow-button .arrow {
+    -fx-background-color: #E77023;
+}

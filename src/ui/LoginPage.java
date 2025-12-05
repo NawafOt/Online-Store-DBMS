@@ -27,6 +27,10 @@ public class LoginPage implements DataReceiver {
 
     private final CustomerDAO customerDAO = new CustomerDAO();
 
+    // HARDCODED ADMIN CREDENTIALS
+    private static final String ADMIN_USERNAME = "admin";
+    private static final String ADMIN_PASSWORD = "admin";
+
     @Override
     public void receiveData(Object data) {
         if (data instanceof String) {
@@ -35,8 +39,9 @@ public class LoginPage implements DataReceiver {
     }
 
     /**
-     * Continue to the application as an authenticated customer (placeholder).
-     * Navigates to the customer home page.
+     * Attempts to log in.
+     * 1. Checks if inputs match Admin credentials.
+     * 2. If not, checks database for Customer credentials.
      */
     @FXML
     public void handleContinue() {
@@ -50,6 +55,17 @@ public class LoginPage implements DataReceiver {
 
         if(password.isEmpty()){
             errorLabel.setText("Password cannot be empty");
+            return;
+        }
+
+        // ADMIN LOGIN CHECK
+        if (ADMIN_USERNAME.equals(email) && ADMIN_PASSWORD.equals(password)) {
+            // Log in as Admin
+            Session.getInstance().loginAsAdmin(1, "Administrator");
+            System.out.println("Login successful: Admin Mode");
+
+            // Navigate to Admin Dashboard
+            PageManager.loadPage("admin/pages/adminhome.fxml");
             return;
         }
 
@@ -76,6 +92,8 @@ public class LoginPage implements DataReceiver {
      */
     @FXML
     public void handleGuest() {
+        // Ensure session is cleared for guest mode
+        Session.getInstance().logout();
         PageManager.loadPage("customer/pages/home.fxml");
     }
 }

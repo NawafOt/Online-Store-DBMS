@@ -33,4 +33,36 @@ public class ValidationUtils {
         int atIndex = email.indexOf('@');
         return atIndex > 0 && atIndex < email.length() - 1;
     }
+
+    /**
+     * Checks if a string is a valid positive integer (for Stock, Quantity).
+     *
+     * @param str The string to check.
+     * @return true if the string represents a positive integer, false otherwise.
+     */
+    public static boolean isPositiveInteger(String str) {
+        if (str == null || str.trim().isEmpty()) return false;
+        try {
+            int value = Integer.parseInt(str.trim());
+            return value >= 0;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Checks if a string is a valid positive double (for Prices).
+     *
+     * @param str The string to check.
+     * @return true if the string represents a positive double, false otherwise.
+     */
+    public static boolean isPositiveDouble(String str) {
+        if (str == null || str.trim().isEmpty()) return false;
+        try {
+            double value = Double.parseDouble(str.trim());
+            return value >= 0.0;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
 }
