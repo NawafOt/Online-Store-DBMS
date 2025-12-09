@@ -7,7 +7,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import model.Order;
-import model.Payment;
 import ui.PageManager;
 
 import java.sql.Date;
@@ -77,25 +76,61 @@ public class OrderManagementPage {
         Order.Status newStatus = statusCombo.getValue();
 
         if (selected == null) {
-            statusLabel.setText("Please select an order first.");
-            statusLabel.setStyle("-fx-text-fill: red;");
+            setStatusMessage("Please select an order first.", true);
             return;
         }
         if (newStatus == null) {
-            statusLabel.setText("Please select a status.");
-            statusLabel.setStyle("-fx-text-fill: red;");
+            setStatusMessage("Please select a new status.", true);
+            return;
+        }
+
+        if (!isValidTransition(selected.getStatus(), newStatus)) {
+            setStatusMessage("Invalid Move: You cannot go from " + selected.getStatus() + " to " + newStatus, true);
             return;
         }
 
         if (orderDAO.updateStatus(selected.getOid(), newStatus)) {
-            statusLabel.setText("Order #" + selected.getOid() + " updated to " + newStatus);
-            statusLabel.setStyle("-fx-text-fill: green;");
+            setStatusMessage("Order #" + selected.getOid() + " updated to " + newStatus, false);
             selected.setStatus(newStatus);
             orderTable.refresh();
         } else {
-            statusLabel.setText("Update failed.");
-            statusLabel.setStyle("-fx-text-fill: red;");
+            setStatusMessage("Update failed due to database error.", true);
         }
+    }
+
+    /**
+     * Defines the strict rules for order lifecycle.
+     */
+    private boolean isValidTransition(Order.Status current, Order.Status next) {
+        // If status is the same, it's technically valid (no change)
+        if (current == next) return true;
+
+        switch (current) {
+            case PENDING:
+                // Can move forward to SHIPPED or be aborted to CANCELLED
+                return next == Order.Status.SHIPPING || next == Order.Status.CANCELLED;
+
+            case SHIPPING:
+                // Can only move forward to DELIVERED
+                return next == Order.Status.DELIVERED;
+
+            case CANCELLED:
+                // Can be restored back to PENDING
+                return next == Order.Status.PENDING;
+
+            case DELIVERED:
+                // Final state. No changes allowed. (for Admin)
+                return false;
+
+            default:
+                return false;
+        }
+    }
+
+    // Helper
+    private void setStatusMessage(String msg, boolean isError) {
+        statusLabel.setText(msg);
+        statusLabel.setStyle(isError ? "-fx-text-fill: red;" : "-fx-text-fill: green;");
     }
 
     @FXML
