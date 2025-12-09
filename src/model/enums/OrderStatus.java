@@ -6,25 +6,25 @@ import java.util.Set;
 
 public class OrderStatus {
 
-    private static final Set<String> REGISTERY = new HashSet<String>();
+    private static final Set<String> REGISTRY = new HashSet<String>();
 
     private OrderStatus() throws InstantiationException {
         throw new InstantiationException("util class. dont make an instance!");
     }
 
     public static Set<String> getAllStatus() {
-        return Collections.unmodifiableSet(REGISTERY);
+        return Collections.unmodifiableSet(REGISTRY);
     }
 
     public static void register(String newStatusName) {
-        REGISTERY.add(newStatusName.toUpperCase());
+        REGISTRY.add(newStatusName.toUpperCase());
     }
 
     public static void clearAllStatus() {
-        REGISTERY.clear();
+        REGISTRY.clear();
     }
 
     public static boolean isValidStatus(String StatusToCheck) {
-        return REGISTERY.contains(StatusToCheck.toUpperCase());
+        return REGISTRY.contains(StatusToCheck.toUpperCase());
     }
 }
