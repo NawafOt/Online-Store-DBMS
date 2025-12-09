@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import model.Order;
+import model.Payment;
 import ui.PageManager;
 
 import java.sql.Date;
@@ -19,6 +20,7 @@ public class OrderManagementPage {
     @FXML private TableColumn<Order, String> colCustomer;
     @FXML private TableColumn<Order, Date> colDate;
     @FXML private TableColumn<Order, Double> colShippingCost;
+    @FXML private TableColumn<Order, Double> colTotal;
     @FXML private TableColumn<Order, Order.Status> colStatus;
 
     @FXML private ComboBox<Order.Status> statusCombo;
@@ -39,6 +41,7 @@ public class OrderManagementPage {
         colOid.setCellValueFactory(new PropertyValueFactory<>("oid"));
         colCustomer.setCellValueFactory(new PropertyValueFactory<>("customerName"));
         colDate.setCellValueFactory(new PropertyValueFactory<>("date"));
+        colTotal.setCellValueFactory(new PropertyValueFactory<>("totalAmount"));
         colShippingCost.setCellValueFactory(new PropertyValueFactory<>("shippingCost"));
         colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
 

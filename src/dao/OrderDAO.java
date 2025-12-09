@@ -26,6 +26,11 @@ public class OrderDAO extends BaseDAO<Order> {
         } catch (SQLException e) {
             // Column doesn't exist, that's okay
         }
+        try {
+            order.setTotalAmount(rs.getDouble("TotalAmount"));
+        } catch (SQLException e) {
+            // Column won't exist in simple select queries, ignore error
+        }
         return order;
     }
 
@@ -99,9 +104,10 @@ public class OrderDAO extends BaseDAO<Order> {
     }
 
     public List<Order> getAllWithCustomerDetails() {
-        String query = "SELECT o.*, c.Name as CustomerName " +
+        String query = "SELECT o.*, c.Name as CustomerName, p.TotalAmount " +
                 "FROM `Order` o " +
                 "JOIN Customer c ON o.CustomerID = c.Cid " +
+                "LEFT JOIN Payment p ON o.Oid = p.OrderID " +
                 "ORDER BY o.Date DESC";
         return executeQuery(query);
     }
