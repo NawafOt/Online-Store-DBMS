@@ -6,7 +6,7 @@ public class Order {
 
     public static enum Status {
         PENDING,
-        SHIPPED,
+        SHIPPING,
         DELIVERED,
         CANCELLED
     }
