@@ -6,25 +6,25 @@ import java.util.Set;
 
 public class PaymentMethod {
 
-    private static final Set<String> paymentMethods = new HashSet<>();
+    private static final Set<String> REGISTERY = new HashSet<>();
 
     private PaymentMethod() throws InstantiationException {
         throw new InstantiationException("util class. dont make an instance!");
     }
 
     public static Set<String> getAllMethod() {
-        return Collections.unmodifiableSet(paymentMethods);
+        return Collections.unmodifiableSet(REGISTERY);
     }
 
     public static void register(String newMethodName) {
-        paymentMethods.add(newMethodName);
+        REGISTERY.add(newMethodName.toUpperCase());
     }
 
     public static void clearAllMethod() {
-        paymentMethods.clear();
+        REGISTERY.clear();
     }
 
     public static boolean isValidMethod(String MethodToCheck) {
-        return paymentMethods.contains(MethodToCheck);
+        return REGISTERY.contains(MethodToCheck.toUpperCase());
     }
 }
