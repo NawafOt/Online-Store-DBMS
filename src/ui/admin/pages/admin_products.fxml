@@ -28,6 +28,8 @@
                     </font>
                 </Label>
                 <Region HBox.hgrow="ALWAYS"/>
+                <ToggleButton fx:id="viewHiddenToggle" text="Show Hidden / Archived"
+                              style="-fx-base: #ffcccc;"/>
                 <TextField fx:id="searchField" promptText="Search by name..." prefWidth="200.0"/>
                 <Button mnemonicParsing="false" onAction="#handleSearch"
                         styleClass="primary-btn" text="Search"/>
@@ -64,12 +66,18 @@
                     <Region prefHeight="10.0"/>
 
                     <HBox spacing="10.0" alignment="CENTER">
-                        <Button mnemonicParsing="false" onAction="#handleAdd"
+                        <Button fx:id="btnAdd" onAction="#handleAdd"
                                 prefWidth="80.0" styleClass="primary-btn" text="Add"/>
-                        <Button mnemonicParsing="false" onAction="#handleUpdate"
+
+                        <Button fx:id="btnUpdate" onAction="#handleUpdate"
                                 prefWidth="80.0" styleClass="primary-btn" text="Update"/>
-                        <Button mnemonicParsing="false" onAction="#handleDelete"
+
+                        <Button fx:id="btnDelete" onAction="#handleDelete"
                                 prefWidth="80.0" styleClass="primary-btn" text="Delete"/>
+
+                        <Button fx:id="btnRestore" onAction="#handleRestore"
+                                visible="false" managed="false"
+                                prefWidth="80.0" styleClass="success-btn" text="Restore"/>
                     </HBox>
 
                     <Button mnemonicParsing="false" onAction="#handleClear"

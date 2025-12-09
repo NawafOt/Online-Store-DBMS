@@ -24,6 +24,12 @@ public class ProductManagementPage {
     @FXML private TextField searchField;
     @FXML private Label statusLabel;
 
+    @FXML private ToggleButton viewHiddenToggle;
+    @FXML private Button btnAdd;
+    @FXML private Button btnUpdate;
+    @FXML private Button btnDelete;
+    @FXML private Button btnRestore;
+
     @FXML private TableView<Product> productTable;
     @FXML private TableColumn<Product, Integer> colId;
     @FXML private TableColumn<Product, String> colName;
@@ -38,8 +44,38 @@ public class ProductManagementPage {
     @FXML
     public void initialize() {
         setupTableColumns();
+
+        viewHiddenToggle.selectedProperty().addListener((obs, oldVal, isHidden) -> {
+            toggleMode(isHidden);
+            loadProducts();
+        });
+
         loadProducts();
         setupTableSelection();
+    }
+
+    private void toggleMode(boolean isArchiveMode) {
+        // 1. Swap Buttons
+        btnAdd.setVisible(!isArchiveMode);
+        btnAdd.setManaged(!isArchiveMode);
+
+        btnUpdate.setVisible(!isArchiveMode);
+        btnUpdate.setManaged(!isArchiveMode);
+
+        btnDelete.setVisible(!isArchiveMode);
+        btnDelete.setManaged(!isArchiveMode);
+
+        btnRestore.setVisible(isArchiveMode);
+        btnRestore.setManaged(isArchiveMode);
+
+        // 2. Lock/Unlock Text Fields
+        nameField.setDisable(isArchiveMode);
+        priceField.setDisable(isArchiveMode);
+        categoryField.setDisable(isArchiveMode);
+        stockField.setDisable(isArchiveMode);
+
+        // Clear selection to avoid confusion
+        handleClear();
     }
 
     private void setupTableColumns() {
@@ -53,8 +89,33 @@ public class ProductManagementPage {
 
     private void loadProducts() {
         productList.clear();
-        List<Product> products = productDAO.getAll();
-        productList.addAll(products);
+        if (viewHiddenToggle.isSelected()) {
+            // Mode 1: Load Hidden Products
+            productList.addAll(productDAO.getHidden());
+            statusLabel.setText("Viewing Archived Products");
+            statusLabel.setStyle("-fx-text-fill: orange;");
+        } else {
+            // Mode 2: Load Active Products
+            productList.addAll(productDAO.getAll());
+            productTable.setStyle("");
+        }
+    }
+
+    @FXML
+    private void handleRestore() {
+        if (selectedProduct == null) {
+            setStatus("Select a product to restore", true);
+            return;
+        }
+
+        selectedProduct.setHidden(false);
+
+        if (productDAO.updateHide(selectedProduct)) {
+            setStatus("Product Restored to Shop!", false);
+            loadProducts();
+        } else {
+            setStatus("Restore failed", true);
+        }
     }
 
     private void setupTableSelection() {
@@ -146,7 +207,7 @@ public class ProductManagementPage {
         }
 
         productList.clear();
-        List<Product> results = productDAO.searchByName("%" + searchTerm + "%");
+        List<Product> results = productDAO.searchByNameAdmin("%" + searchTerm + "%");
         productList.addAll(results);
         setStatus("Found " + results.size() + " product(s)", false);
     }

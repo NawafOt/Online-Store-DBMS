@@ -7,6 +7,7 @@ public class Product {
     private double unitPrice;
     private String category;
     private int stock;
+    private boolean hidden;
 
     public Product() {
     }
@@ -67,6 +68,14 @@ public class Product {
         this.stock = stock;
     }
 
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
+    }
+
     public boolean isInStock() {
         return stock > 0;
     }
@@ -84,6 +93,19 @@ public class Product {
                 ", category='" + category + '\'' +
                 ", stock=" + stock +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return pid == product.pid;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(pid);
     }
 
     public String getDisplayName() {
