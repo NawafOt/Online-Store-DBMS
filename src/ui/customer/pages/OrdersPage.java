@@ -74,13 +74,13 @@ public class OrdersPage {
         // 2. Filter based on selected Tab
         boolean showActive = btnActive.isSelected();
         List<Order> filteredOrders = allOrders.stream().filter(order -> {
-            Order.Status s = order.getStatus();
+            String s = order.getStatus();
             if (showActive) {
                 // Active = Pending or Shipped
-                return s == Order.Status.PENDING || s == Order.Status.SHIPPING;
+                return s.equalsIgnoreCase("PENDING") || s.equalsIgnoreCase("SHIPPING");
             } else {
                 // Past = Delivered or Cancelled
-                return s == Order.Status.DELIVERED || s == Order.Status.CANCELLED;
+                return s.equalsIgnoreCase("DELIVERED") || s.equalsIgnoreCase("CANCELLED");
             }
         }).toList();
 
@@ -122,12 +122,12 @@ public class OrdersPage {
             actions.add(new CardAction("View Items", () -> showOrderDetails(order)));
 
             // 2. Cancel Order (Only if PENDING)
-            if (order.getStatus() == Order.Status.PENDING) {
+            if (order.getStatus().equalsIgnoreCase("PENDING")) {
                 actions.add(new CardAction("Cancel Order", () -> handleCancel(order)));
             }
 
             // 3. Re-order (Only for Past Orders)
-            if (order.getStatus() == Order.Status.DELIVERED || order.getStatus() == Order.Status.CANCELLED) {
+            if (order.getStatus().equalsIgnoreCase("DELIVERED") || order.getStatus().equalsIgnoreCase("CANCELLED")) {
                 actions.add(new CardAction("Re-order Items", () -> handleReorder(order)));
             }
 
@@ -141,7 +141,7 @@ public class OrdersPage {
 
     private void handleCancel(Order order) {
         // 1. Validation
-        if (order.getStatus() != Order.Status.PENDING) {
+        if (!order.getStatus().equalsIgnoreCase("PENDING")) {
             showAlert("Error", "Only pending orders can be cancelled.");
             return;
         }
@@ -159,7 +159,7 @@ public class OrdersPage {
             }
 
             // 3. Update Status to CANCELLED
-            if (orderDAO.updateStatus(order.getOid(), Order.Status.CANCELLED)) {
+            if (orderDAO.updateStatus(order.getOid(), "CANCELLED")) {
                 showAlert("Success", "Order has been cancelled and items returned to stock.");
                 loadOrders();
             } else {
