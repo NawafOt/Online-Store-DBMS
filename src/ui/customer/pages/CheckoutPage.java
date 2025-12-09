@@ -118,9 +118,7 @@ public class CheckoutPage {
             productDAO.reduceStock(product.getPid(), quantity);
         }
 
-        // Set payment status intelligently using the enum
-        Payment.Status paymentStatus = Payment.Method.CASH.equals(selectedPayment) ? Payment.Status.PENDING : Payment.Status.PAID;
-        Payment payment = new Payment(orderId, selectedPayment, paymentStatus, session.getCustomerId(), grandTotal);
+        Payment payment = new Payment(orderId, selectedPayment, session.getCustomerId(), grandTotal);
         paymentDAO.insert(payment);
 
         session.getCart().clear();
