@@ -35,6 +35,7 @@
                                 <TableColumn fx:id="colOid" prefWidth="80.0" text="Order ID" />
                                 <TableColumn fx:id="colCustomer" prefWidth="200.0" text="Customer Name" />
                                 <TableColumn fx:id="colDate" prefWidth="150.0" text="Date Placed" />
+                                <TableColumn fx:id="colTotal" prefWidth="150.0" text="Total Amount" />
                                 <TableColumn fx:id="colShippingCost" prefWidth="120.0" text="Shipping Cost" />
                                 <TableColumn fx:id="colStatus" prefWidth="150.0" text="Current Status" />
                             </columns>
