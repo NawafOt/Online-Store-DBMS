@@ -102,30 +102,25 @@ public class OrderManagementPage {
     /**
      * Defines the strict rules for order lifecycle.
      */
-    private boolean isValidTransition(Order.Status current, Order.Status next) {
+    private boolean isValidTransition(String current, String next) {
         // If status is the same, it's technically valid (no change)
-        if (current == next) return true;
+        if (current.equalsIgnoreCase(next)) return true;
 
-        switch (current) {
-            case PENDING:
+        return switch (current) {
+            case "PENDING" ->
                 // Can move forward to SHIPPED or be aborted to CANCELLED
-                return next == Order.Status.SHIPPING || next == Order.Status.CANCELLED;
-
-            case SHIPPING:
+                    next.equalsIgnoreCase("SHIPPING") || next.equalsIgnoreCase("CANCELLED");
+            case "SHIPPING" ->
                 // Can only move forward to DELIVERED
-                return next == Order.Status.DELIVERED;
-
-            case CANCELLED:
+                    next.equalsIgnoreCase("DELIVERED");
+            case "CANCELLED" ->
                 // Can be restored back to PENDING
-                return next == Order.Status.PENDING;
-
-            case DELIVERED:
+                    next.equalsIgnoreCase("PENDING");
+            case "DELIVERED" ->
                 // Final state. No changes allowed. (for Admin)
-                return false;
-
-            default:
-                return false;
-        }
+                    false;
+            default -> false;
+        };
     }
 
     // Helper
