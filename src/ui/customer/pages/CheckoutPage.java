@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import model.*;
+import model.enums.OrderStatus;
 import ui.PageManager;
 
 import java.sql.Date;
@@ -100,7 +101,7 @@ public class CheckoutPage {
         newOrder.setCustomerId(session.getCustomerId());
         newOrder.setShippingId(selectedShipping.getSid());
         newOrder.setDate(new Date(System.currentTimeMillis()));
-        newOrder.setStatus(Order.Status.PENDING); // Using the enum
+        newOrder.setStatus((OrderStatus.isValidStatus("PENDING")) ? "PENDING" : null); //check against DB!!
         newOrder.setShippingCost(shippingCost);
 
         int orderId = orderDAO.insert(newOrder);
