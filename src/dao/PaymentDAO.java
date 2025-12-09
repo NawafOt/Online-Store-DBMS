@@ -16,7 +16,7 @@ public class PaymentDAO extends BaseDAO<Payment> {
     protected Payment mapResultSetToEntity(ResultSet rs) throws SQLException {
         Payment payment = new Payment();
         payment.setOrderId(rs.getInt("OrderID"));
-        payment.setMethod(Payment.Method.valueOf(rs.getString("Method").toUpperCase()));
+        payment.setMethod(rs.getString("Method"));
         payment.setCustomerId(rs.getInt("CustomerID"));
         payment.setTotalAmount(rs.getDouble("TotalAmount"));
         try {
@@ -33,7 +33,7 @@ public class PaymentDAO extends BaseDAO<Payment> {
         int rowsAffected = executeUpdate(
                 query,
                 payment.getOrderId(),
-                payment.getMethod().name(),
+                payment.getMethod(),
                 payment.getCustomerId(),
                 payment.getTotalAmount()
         );
@@ -45,7 +45,7 @@ public class PaymentDAO extends BaseDAO<Payment> {
         String query = "UPDATE Payment SET Method = ?, CustomerID = ?, TotalAmount = ? WHERE OrderID = ?";
         int rowsAffected = executeUpdate(
                 query,
-                payment.getMethod().name(),
+                payment.getMethod(),
                 payment.getCustomerId(),
                 payment.getTotalAmount(),
                 payment.getOrderId()
@@ -78,8 +78,8 @@ public class PaymentDAO extends BaseDAO<Payment> {
         return executeQuery(query, customerId);
     }
 
-    public List<Payment> getByMethod(Payment.Method method) {
+    public List<Payment> getByMethod(String method) {
         String query = "SELECT * FROM Payment WHERE Method = ?";
-        return executeQuery(query, method.name());
+        return executeQuery(query, method);
     }
 }
