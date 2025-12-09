@@ -17,7 +17,6 @@ public class PaymentDAO extends BaseDAO<Payment> {
         Payment payment = new Payment();
         payment.setOrderId(rs.getInt("OrderID"));
         payment.setMethod(Payment.Method.valueOf(rs.getString("Method").toUpperCase()));
-        payment.setStatus(Payment.Status.valueOf(rs.getString("Status").toUpperCase()));
         payment.setCustomerId(rs.getInt("CustomerID"));
         payment.setTotalAmount(rs.getDouble("TotalAmount"));
         try {
@@ -30,12 +29,11 @@ public class PaymentDAO extends BaseDAO<Payment> {
 
     @Override
     public int insert(Payment payment) {
-        String query = "INSERT INTO Payment (OrderID, Method, Status, CustomerID, TotalAmount) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Payment (OrderID, Method, CustomerID, TotalAmount) VALUES (?, ?, ?, ?)";
         int rowsAffected = executeUpdate(
                 query,
                 payment.getOrderId(),
                 payment.getMethod().name(),
-                payment.getStatus().name(),
                 payment.getCustomerId(),
                 payment.getTotalAmount()
         );
@@ -44,21 +42,14 @@ public class PaymentDAO extends BaseDAO<Payment> {
 
     @Override
     public boolean update(Payment payment) {
-        String query = "UPDATE Payment SET Method = ?, Status = ?, CustomerID = ?, TotalAmount = ? WHERE OrderID = ?";
+        String query = "UPDATE Payment SET Method = ?, CustomerID = ?, TotalAmount = ? WHERE OrderID = ?";
         int rowsAffected = executeUpdate(
                 query,
                 payment.getMethod().name(),
-                payment.getStatus().name(),
                 payment.getCustomerId(),
                 payment.getTotalAmount(),
                 payment.getOrderId()
         );
-        return rowsAffected > 0;
-    }
-
-    public boolean updateStatus(int orderId, Payment.Status newStatus) {
-        String query = "UPDATE Payment SET Status = ? WHERE OrderID = ?";
-        int rowsAffected = executeUpdate(query, newStatus.name(), orderId);
         return rowsAffected > 0;
     }
 
@@ -85,11 +76,6 @@ public class PaymentDAO extends BaseDAO<Payment> {
     public List<Payment> getByCustomerId(int customerId) {
         String query = "SELECT * FROM Payment WHERE CustomerID = ?";
         return executeQuery(query, customerId);
-    }
-
-    public List<Payment> getByStatus(Payment.Status status) {
-        String query = "SELECT * FROM Payment WHERE Status = ?";
-        return executeQuery(query, status.name());
     }
 
     public List<Payment> getByMethod(Payment.Method method) {

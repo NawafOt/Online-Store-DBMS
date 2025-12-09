@@ -2,12 +2,6 @@ package model;
 
 public class Payment {
 
-    public static enum Status {
-        PENDING,
-        PAID,
-        FAILED
-    }
-
     public static enum Method {
         CREDIT_CARD,
         BANK_TRANSFER,
@@ -16,7 +10,6 @@ public class Payment {
 
     private int orderId;
     private Method method;
-    private Status status;
     private int customerId;
     private double totalAmount;
 
@@ -26,10 +19,9 @@ public class Payment {
     public Payment() {
     }
 
-    public Payment(int orderId, Method method, Status status, int customerId, double totalAmount) {
+    public Payment(int orderId, Method method, int customerId, double totalAmount) {
         this.orderId = orderId;
         this.method = method;
-        this.status = status;
         this.customerId = customerId;
         this.totalAmount = totalAmount;
     }
@@ -49,14 +41,6 @@ public class Payment {
 
     public void setMethod(Method method) {
         this.method = method;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
     }
 
     public int getCustomerId() {
