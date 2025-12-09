@@ -56,10 +56,11 @@ public class ProductDAO extends BaseDAO<Product> {
     }
 
     public boolean updateHide(Product product){
-        String query = "UPDATE Product SET Hide = ?";
+        String query = "UPDATE Product SET Hide = ? WHERE Pid = ?";
         int rowsAffected = executeUpdate(
                 query,
-                product.isHidden()
+                product.isHidden(),
+                product.getPid()
         );
         return rowsAffected > 0;
     }
