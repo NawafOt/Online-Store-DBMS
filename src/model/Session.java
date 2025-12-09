@@ -1,8 +1,5 @@
 package model;
 
-import javafx.stage.Stage;
-import ui.customer.pages.CartPage;
-
 import java.util.ArrayList;
 
 /**
