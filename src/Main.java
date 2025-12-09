@@ -5,12 +5,15 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import ui.PageManager;
+import utils.EnumLoader;
 
 import java.util.Objects;
 
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+        EnumLoader.loadAllEnums();
 
         PageManager.initialize(primaryStage);
 

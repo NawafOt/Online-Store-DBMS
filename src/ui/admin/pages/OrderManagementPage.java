@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import model.Order;
 import model.Payment;
+import model.enums.OrderStatus;
 import ui.PageManager;
 
 import java.sql.Date;
@@ -21,9 +22,9 @@ public class OrderManagementPage {
     @FXML private TableColumn<Order, Date> colDate;
     @FXML private TableColumn<Order, Double> colShippingCost;
     @FXML private TableColumn<Order, Double> colTotal;
-    @FXML private TableColumn<Order, Order.Status> colStatus;
+    @FXML private TableColumn<Order, String> colStatus;
 
-    @FXML private ComboBox<Order.Status> statusCombo;
+    @FXML private ComboBox<String> statusCombo;
     @FXML private ComboBox<String> filterCombo;
     @FXML private Label statusLabel;
 
@@ -56,12 +57,12 @@ public class OrderManagementPage {
     }
 
     private void setupControls() {
-        statusCombo.setItems(FXCollections.observableArrayList(Order.Status.values()));
+        statusCombo.setItems(FXCollections.observableArrayList(OrderStatus.getAllStatus()));
 
         ObservableList<String> filters = FXCollections.observableArrayList("All");
-        for(Order.Status s : Order.Status.values()) {
-            filters.add(s.name());
-        }
+
+        filters.addAll(OrderStatus.getAllStatus());
+
         filterCombo.setItems(filters);
         filterCombo.getSelectionModel().selectFirst();
     }
@@ -74,7 +75,7 @@ public class OrderManagementPage {
     @FXML
     private void handleUpdateStatus() {
         Order selected = orderTable.getSelectionModel().getSelectedItem();
-        Order.Status newStatus = statusCombo.getValue();
+        String newStatus = statusCombo.getValue();
 
         if (selected == null) {
             statusLabel.setText("Please select an order first.");
@@ -101,16 +102,17 @@ public class OrderManagementPage {
     @FXML
     private void handleFilter() {
         String filter = filterCombo.getValue();
+
         if (filter == null || filter.equals("All")) {
             loadOrders();
         } else {
             orderList.clear();
             List<Order> all = orderDAO.getAllWithCustomerDetails();
-            for(Order o : all) {
-                if(o.getStatus().name().equals(filter)) {
+
+            for(Order o : all)
+                if(o.getStatus().equalsIgnoreCase(filter))
                     orderList.add(o);
-                }
-            }
+
         }
     }
 

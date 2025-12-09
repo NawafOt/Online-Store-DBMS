@@ -16,7 +16,7 @@ public class OrderDAO extends BaseDAO<Order> {
     protected Order mapResultSetToEntity(ResultSet rs) throws SQLException {
         Order order = new Order();
         order.setOid(rs.getInt("Oid"));
-        order.setStatus(Order.Status.valueOf(rs.getString("Status").toUpperCase()));
+        order.setStatus(rs.getString("Status"));
         order.setDate(rs.getDate("Date"));
         order.setCustomerId(rs.getInt("CustomerID"));
         order.setShippingId(rs.getInt("ShippingID"));
@@ -39,7 +39,7 @@ public class OrderDAO extends BaseDAO<Order> {
         String query = "INSERT INTO `Order` (Status, Date, CustomerID, ShippingID, ShippingCost) VALUES (?, ?, ?, ?, ?)";
         return executeInsertWithGeneratedKey(
                 query,
-                order.getStatus().name(),
+                order.getStatus(),
                 order.getDate(),
                 order.getCustomerId(),
                 order.getShippingId(),
@@ -52,7 +52,7 @@ public class OrderDAO extends BaseDAO<Order> {
         String query = "UPDATE `Order` SET Status = ?, Date = ?, CustomerID = ?, ShippingID = ?, ShippingCost = ? WHERE Oid = ?";
         int rowsAffected = executeUpdate(
                 query,
-                order.getStatus().name(),
+                order.getStatus(),
                 order.getDate(),
                 order.getCustomerId(),
                 order.getShippingId(),
@@ -62,9 +62,9 @@ public class OrderDAO extends BaseDAO<Order> {
         return rowsAffected > 0;
     }
 
-    public boolean updateStatus(int oid, Order.Status newStatus) {
+    public boolean updateStatus(int oid, String newStatus) {
         String query = "UPDATE `Order` SET Status = ? WHERE Oid = ?";
-        int rowsAffected = executeUpdate(query, newStatus.name(), oid);
+        int rowsAffected = executeUpdate(query, newStatus, oid);
         return rowsAffected > 0;
     }
 
@@ -93,9 +93,9 @@ public class OrderDAO extends BaseDAO<Order> {
         return executeQuery(query, customerId);
     }
 
-    public List<Order> getByStatus(Order.Status status) {
+    public List<Order> getByStatus(String status) {
         String query = "SELECT * FROM `Order` WHERE Status = ?";
-        return executeQuery(query, status.name());
+        return executeQuery(query, status);
     }
 
     public List<Order> getByDateRange(java.sql.Date startDate, java.sql.Date endDate) {
