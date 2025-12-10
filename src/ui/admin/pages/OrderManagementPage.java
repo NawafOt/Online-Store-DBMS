@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import model.Order;
 import model.OrderProduct;
+import model.Product;
 import model.enums.OrderStatus;
 import ui.PageManager;
 
@@ -136,7 +137,7 @@ public class OrderManagementPage {
 
         // First Pass: Check if enough stock exists for ALL items
         for (OrderProduct op : items) {
-            model.Product p = productDAO.getById(op.getProductId());
+            Product p = productDAO.getById(op.getProductId());
             if (p.getStock() < op.getQuantity()) {
                 return false; // Not enough stock to restore this order
             }
