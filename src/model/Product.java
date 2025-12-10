@@ -8,6 +8,7 @@ public class Product {
     private String category;
     private int stock;
     private boolean hidden;
+    private int count;
 
     public Product() {
     }
@@ -28,10 +29,10 @@ public class Product {
     }
 
     // Getters and Setters
+
     public int getPid() {
         return pid;
     }
-
     public void setPid(int pid) {
         this.pid = pid;
     }
@@ -54,6 +55,14 @@ public class Product {
 
     public String getCategory() {
         return category;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 
     public void setCategory(String category) {
