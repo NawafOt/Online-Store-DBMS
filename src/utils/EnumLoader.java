@@ -75,7 +75,6 @@ public class EnumLoader {
 
     }
 
-
     private static String[] parseEnums(String strToParse) {
 
         int start = strToParse.indexOf('(') + 1;

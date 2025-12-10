@@ -1,12 +1,15 @@
 package ui.admin.pages;
 
 import dao.OrderDAO;
+import dao.OrderProductDAO;
+import dao.ProductDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import model.Order;
+import model.OrderProduct;
 import model.enums.OrderStatus;
 import ui.PageManager;
 
@@ -28,6 +31,8 @@ public class OrderManagementPage {
     @FXML private Label statusLabel;
 
     private final OrderDAO orderDAO = new OrderDAO();
+    private final OrderProductDAO orderProductDAO = new OrderProductDAO();
+    private final ProductDAO productDAO = new ProductDAO();
     private final ObservableList<Order> orderList = FXCollections.observableArrayList();
 
     @FXML
@@ -75,6 +80,7 @@ public class OrderManagementPage {
     private void handleUpdateStatus() {
         Order selected = orderTable.getSelectionModel().getSelectedItem();
         String newStatus = statusCombo.getValue();
+        String currentStatus = (selected != null) ? selected.getStatus() : "";
 
         if (selected == null) {
             setStatusMessage("Please select an order first.", true);
@@ -90,6 +96,17 @@ public class OrderManagementPage {
             return;
         }
 
+        if (newStatus.equalsIgnoreCase("CANCELLED") && !currentStatus.equalsIgnoreCase("CANCELLED")) {
+            restoreStock(selected.getOid());
+        }
+        else if (currentStatus.equalsIgnoreCase("CANCELLED") && newStatus.equalsIgnoreCase("PENDING")) {
+            boolean success = reReserveStock(selected.getOid());
+            if (!success) {
+                setStatusMessage("Cannot restore order: Not enough stock available.", true);
+                return; // Stop the update
+            }
+        }
+
         if (orderDAO.updateStatus(selected.getOid(), newStatus)) {
             setStatusMessage("Order #" + selected.getOid() + " updated to " + newStatus, false);
             selected.setStatus(newStatus);
@@ -97,6 +114,39 @@ public class OrderManagementPage {
         } else {
             setStatusMessage("Update failed due to database error.", true);
         }
+    }
+
+    /**
+     * Loops through all items in the order and adds their quantity back to the global stock.
+     */
+    private void restoreStock(int orderId) {
+        List<OrderProduct> items = orderProductDAO.getByOrderIdWithDetails(orderId);
+        for (OrderProduct op : items) {
+            productDAO.increaseStock(op.getProductId(), op.getQuantity());
+        }
+        System.out.println("Stock restored for Order #" + orderId);
+    }
+
+    /**
+     * Loops through items to check if we can take them back out of stock.
+     * Used when moving from CANCELLED back to PENDING.
+     */
+    private boolean reReserveStock(int orderId) {
+        List<OrderProduct> items = orderProductDAO.getByOrderIdWithDetails(orderId);
+
+        // First Pass: Check if enough stock exists for ALL items
+        for (OrderProduct op : items) {
+            model.Product p = productDAO.getById(op.getProductId());
+            if (p.getStock() < op.getQuantity()) {
+                return false; // Not enough stock to restore this order
+            }
+        }
+
+        // Second Pass: Actually reduce the stock
+        for (OrderProduct op : items) {
+            productDAO.reduceStock(op.getProductId(), op.getQuantity());
+        }
+        return true;
     }
 
     /**
