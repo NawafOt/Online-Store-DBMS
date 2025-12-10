@@ -13,6 +13,7 @@ import model.OrderProduct;
 import model.Product;
 import model.enums.OrderStatus;
 import ui.PageManager;
+import utils.Alerts;
 
 import java.sql.Date;
 import java.util.List;
@@ -103,7 +104,7 @@ public class OrderManagementPage {
         else if (currentStatus.equalsIgnoreCase("CANCELLED") && newStatus.equalsIgnoreCase("PENDING")) {
             boolean success = reReserveStock(selected.getOid());
             if (!success) {
-                setStatusMessage("Cannot restore order: Not enough stock available.", true);
+                setStatusMessage("Cannot restore order.", true);
                 return; // Stop the update
             }
         }
@@ -134,14 +135,22 @@ public class OrderManagementPage {
      */
     private boolean reReserveStock(int orderId) {
         List<OrderProduct> items = orderProductDAO.getByOrderIdWithDetails(orderId);
+        boolean willSend = false;
 
         // First Pass: Check if enough stock exists for ALL items
         for (OrderProduct op : items) {
             Product p = productDAO.getById(op.getProductId());
+            if(p.isHidden())
+                willSend = true;
+
             if (p.getStock() < op.getQuantity()) {
                 return false; // Not enough stock to restore this order
             }
         }
+
+        if(willSend)
+            if(!Alerts.showConfirmation("returning a hidden item"))
+                return false;
 
         // Second Pass: Actually reduce the stock
         for (OrderProduct op : items) {
