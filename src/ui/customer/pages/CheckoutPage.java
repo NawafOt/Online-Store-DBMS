@@ -48,7 +48,9 @@ public class CheckoutPage {
         }
 
         addressLabel.setText(customer.getAddress());
-        subtotal = cartItems.stream().mapToDouble(Product::getUnitPrice).sum();
+        subtotal = cartItems.stream().mapToDouble( p -> {
+            return p.getCount() * p.getUnitPrice();
+        }).sum();
 
         List<ShippingCompany> shippingCompanies = shippingDAO.getAll();
         shippingChoiceBox.setItems(FXCollections.observableArrayList(shippingCompanies));
@@ -89,10 +91,9 @@ public class CheckoutPage {
         grandTotal *= (1 + TAX_RATE);
 
         // Final Stock Validation
-        Map<Product, Long> quantities = session.getCart().stream().collect(Collectors.groupingBy(p -> p, Collectors.counting()));
-        for (Map.Entry<Product, Long> entry : quantities.entrySet()) {
-            if (entry.getKey().getStock() < entry.getValue()) {
-                errorLabel.setText("Error: Not enough stock for " + entry.getKey().getName());
+        for (Product product : session.getCart()) {
+            if (product.getStock() < product.getCount()) {
+                errorLabel.setText("Error: Not enough stock for " + product.getName());
                 return;
             }
         }
@@ -112,9 +113,8 @@ public class CheckoutPage {
         }
 
         // Link Products and Reduce Stock
-        for (Map.Entry<Product, Long> entry : quantities.entrySet()) {
-            Product product = entry.getKey();
-            int quantity = entry.getValue().intValue();
+        for (Product product : session.getCart()) {
+            int quantity = product.getCount();
             OrderProduct orderProduct = new OrderProduct(orderId, product.getPid(), quantity, product.getUnitPrice());
             orderProductDAO.insert(orderProduct);
             productDAO.reduceStock(product.getPid(), quantity);

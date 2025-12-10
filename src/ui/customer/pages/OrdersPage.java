@@ -37,7 +37,8 @@ public class OrdersPage {
     private final OrderProductDAO orderProductDAO = new OrderProductDAO();
     private final PaymentDAO paymentDAO = new PaymentDAO();
     private final ProductDAO productDAO = new ProductDAO();
-    private final int customerId = Session.getInstance().getCustomerId();
+    private final Session session = Session.getInstance();
+    private final int customerId = session.getCustomerId();
 
     @FXML
     public void initialize() {
@@ -169,6 +170,8 @@ public class OrdersPage {
     }
 
     private void handleReorder(Order order) {
+        ArrayList<Product> cart = session.getCart();
+        cart.clear();
         List<OrderProduct> oldItems = orderProductDAO.getByOrderIdWithDetails(order.getOid());
 
         if (oldItems.isEmpty()) {
@@ -199,9 +202,9 @@ public class OrdersPage {
                 // If we want 5 but have 3, we take 3. If we have 10, we take 5.
                 int quantityToAdd = Math.min(originalQty, currentStock);
 
-                for (int i = 0; i < quantityToAdd; i++) {
-                    Session.getInstance().getCart().add(currentProduct);
-                }
+
+                cart.add(currentProduct);
+                currentProduct.setCount(quantityToAdd);
 
                 totalItemsAdded += quantityToAdd;
 
@@ -233,7 +236,7 @@ public class OrdersPage {
         for (OrderProduct op : products) {
             details.append("• ").append(op.getProductName())
                     .append(" (x").append(op.getQuantity()).append(")")
-                    .append(" - $").append(String.format("%.2f", op.getPriceAtPurchase()))
+                    .append(" - $").append(String.format("%.2f (Each)", op.getPriceAtPurchase()))
                     .append("\n");
         }
 

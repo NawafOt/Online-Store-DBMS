@@ -83,9 +83,11 @@ public class CartPage {
         };
 
         double total = 0.0;
+        for(Product product : session.getCart()){
+            total += product.getCount() * product.getUnitPrice();
+        }
         for (Map.Entry<Product, Long> entry : quantities.entrySet()) {
             addCardForProduct(entry, mapper);
-            total += entry.getKey().getUnitPrice() * entry.getValue();
         }
         updateTotal(total);
     }

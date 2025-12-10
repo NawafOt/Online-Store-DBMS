@@ -44,13 +44,20 @@ public class ProductDetailsPage implements DataReceiver {
     public void receiveData(Object data) {
         if (data instanceof Product) {
             currentProduct = (Product) data;
+            if (session.getCart().contains(currentProduct)) {
+                int index = session.getCart().indexOf(currentProduct);
+                currentProduct = session.getCart().get(index);
+            }
+
             productNameLabel.setText(currentProduct.getName());
             priceLabel.setText(String.format("$%.2f", currentProduct.getUnitPrice()));
             categoryLabel.setText(currentProduct.getCategory());
-            stockLabel.setText(String.valueOf(currentProduct.getStock()));
+            if(currentProduct.getStock() > currentProduct.getCount())
+                stockLabel.setText(String.valueOf(currentProduct.getStock() - currentProduct.getCount()));
+            else stockLabel.setText("0");
 
             // Configure the quantity spinner
-            if (currentProduct.getStock() > 0) {
+            if (currentProduct.getStock() > 0 && currentProduct.getStock() > currentProduct.getCount()) {
                 SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, currentProduct.getStock() - currentProduct.getCount(), 1);
                 quantitySpinner.setValueFactory(valueFactory);
                 addToCartButton.setDisable(false);
@@ -88,6 +95,8 @@ public class ProductDetailsPage implements DataReceiver {
             }
 
             feedbackLabel.setText(quantity + " x '" + currentProduct.getName() + "' added to your cart!");
+
+            receiveData(currentProduct);
         }
     }
 
