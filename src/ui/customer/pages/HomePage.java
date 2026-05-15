@@ -2,7 +2,6 @@ package ui.customer.pages;
 
 import dao.ProductDAO;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -45,7 +44,6 @@ public class HomePage {
     public void initialize() {
         loadImages();
         setupUserSession();
-        loadProductsByCategory();
 
         searchResultsList.setCellFactory(createProductCellFactory());
         searchResultsList.getSelectionModel().selectedItemProperty().addListener((obs, old, newVal) -> {
@@ -177,35 +175,6 @@ public class HomePage {
         } else if (session.isCustomer()) {
             welcomeLabel.setText("Welcome, " + session.getCustomerName());
             logoutButton.setText("Logout");
-        }
-    }
-
-    /**
-     * Fetches products from the database and groups them by category into an Accordion.
-     * Each category gets its own TitledPane containing a ListView of products.
-     */
-    private void loadProductsByCategory() {
-        List<String> categories = productDAO.getAllCategories();
-
-        for (String category : categories) {
-            List<Product> productsInCategory = productDAO.getByCategory(category);
-            // Convert the standard List into a JavaFX ObservableList, which the ListView can watch for changes.
-            ObservableList<Product> observableProducts = FXCollections.observableArrayList(productsInCategory);
-
-            // Create a new ListView for this category's products.
-            ListView<Product> productListView = new ListView<>(observableProducts);
-            productListView.setCellFactory(createProductCellFactory());
-
-            // Add a listener to handle clicks on products in the list.
-            productListView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-                if (newSelection != null) {
-                    // When a product is selected, navigate to the details page and pass the product object.
-                    PageManager.loadPage("customer/pages/product_details.fxml", newSelection);
-                }
-            });
-
-            TitledPane titledPane = new TitledPane(category, productListView);
-            categoryAccordion.getPanes().add(titledPane);
         }
     }
 

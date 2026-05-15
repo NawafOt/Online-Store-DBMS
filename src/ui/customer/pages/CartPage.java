@@ -74,7 +74,7 @@ public class CartPage {
         // Mapper function to extract display strings from a Product and its quantity
         Function<Map.Entry<Product, Long>, String[]> mapper = entry -> {
             Product product = entry.getKey();
-            long quantity = entry.getValue();
+            long quantity = product.getCount();
             return new String[]{
                     product.getName() + " (x" + quantity + ")",
                     "Price: $" + String.format("%.2f", product.getUnitPrice()) + " each",
@@ -83,9 +83,11 @@ public class CartPage {
         };
 
         double total = 0.0;
+        for(Product product : session.getCart()){
+            total += product.getCount() * product.getUnitPrice();
+        }
         for (Map.Entry<Product, Long> entry : quantities.entrySet()) {
             addCardForProduct(entry, mapper);
-            total += entry.getKey().getUnitPrice() * entry.getValue();
         }
         updateTotal(total);
     }

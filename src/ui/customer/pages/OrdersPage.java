@@ -3,110 +3,268 @@ package ui.customer.pages;
 import dao.OrderDAO;
 import dao.OrderProductDAO;
 import dao.PaymentDAO;
+import dao.ProductDAO;
 import javafx.fxml.FXML;
-import javafx.scene.control.Accordion;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TitledPane;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import model.Order;
-import model.OrderProduct;
-import model.Payment;
-import model.Session;
+import javafx.scene.layout.VBox;
+import model.*;
 import ui.PageManager;
+import ui.commons.CardAction;
+import ui.commons.CardController;
+import utils.Alerts;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 
 /**
- * Controller for displaying a customer's order history.
- * Each order is displayed in a collapsible TitledPane within an Accordion.
+ * Controller for displaying a customer's order history using filtered Cards.
  */
 public class OrdersPage {
 
-    @FXML
-    private ImageView iconReturn;
-    @FXML
-    private Accordion ordersAccordion;
+    @FXML private ImageView iconReturn;
+    @FXML private VBox cardContainer;
+    @FXML private ToggleButton btnActive;
+    @FXML private ToggleButton btnPast;
 
     private final OrderDAO orderDAO = new OrderDAO();
     private final OrderProductDAO orderProductDAO = new OrderProductDAO();
     private final PaymentDAO paymentDAO = new PaymentDAO();
-    private final int customerId = Session.getInstance().getCustomerId();
+    private final ProductDAO productDAO = new ProductDAO();
+    private final Session session = Session.getInstance();
+    private final int customerId = session.getCustomerId();
 
-    /**
-     * FXML initialization: loads icons and populates the orders view.
-     */
     @FXML
     public void initialize() {
         loadImages();
-        loadCustomerOrders();
+        setupToggles();
+        loadOrders();
     }
 
-    /**
-     * Fetches and displays the customer's orders in an accordion view.
-     */
-    private void loadCustomerOrders() {
-        // Get all orders for the current customer.
-        List<Order> orders = orderDAO.getByCustomerId(customerId);
+    private void setupToggles() {
+        ToggleGroup toggleGroup = new ToggleGroup();
+        btnActive.setToggleGroup(toggleGroup);
+        btnPast.setToggleGroup(toggleGroup);
 
-        if (orders.isEmpty()) {
-            ordersAccordion.getPanes().add(new TitledPane("No Orders Found", new Label("You have not placed any orders yet.")));
+        // Default to Active
+        btnActive.setSelected(true);
+
+        // Reload orders when selection changes
+        toggleGroup.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                loadOrders();
+            } else {
+                // Prevent unselecting both; force one to remain selected
+                oldVal.setSelected(true);
+            }
+        });
+    }
+
+    private void loadOrders() {
+        cardContainer.getChildren().clear();
+
+        // 1. Fetch all orders
+        List<Order> allOrders = orderDAO.getByCustomerId(customerId);
+
+        // 2. Filter based on selected Tab
+        boolean showActive = btnActive.isSelected();
+        List<Order> filteredOrders = allOrders.stream().filter(order -> {
+            String s = order.getStatus();
+            if (showActive) {
+                // Active = Pending or Shipped
+                return s.equalsIgnoreCase("PENDING") || s.equalsIgnoreCase("SHIPPING");
+            } else {
+                // Past = Delivered or Cancelled
+                return s.equalsIgnoreCase("DELIVERED") || s.equalsIgnoreCase("CANCELLED");
+            }
+        }).toList();
+
+        // 3. Handle Empty State
+        if (filteredOrders.isEmpty()) {
+            Label emptyLabel = new Label(showActive ? "No active orders." : "No past orders found.");
+            emptyLabel.setStyle("-fx-text-fill: grey; -fx-font-size: 14px;");
+            cardContainer.getChildren().add(emptyLabel);
             return;
         }
 
-        for (Order order : orders) {
-            // For each order, create a TitledPane.
-            TitledPane pane = createOrderPane(order);
-            ordersAccordion.getPanes().add(pane);
+        // 4. Create Cards
+        for (Order order : filteredOrders) {
+            addCardForOrder(order);
         }
     }
 
-    /**
-     * Creates a TitledPane for a single order, including its details and the products it contains.
-     * @param order The order to display.
-     * @return A TitledPane ready to be added to the Accordion.
-     */
-    private TitledPane createOrderPane(Order order) {
-        // Fetch the payment record to get the historically accurate grand total.
-        Payment payment = paymentDAO.getById(order.getOid());
-        double grandTotal = (payment != null) ? payment.getTotalAmount() : 0.0;
+    private void addCardForOrder(Order order) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/commons/Card.fxml"));
+            Node cardNode = loader.load();
+            CardController<Order> controller = loader.getController();
 
-        // Create the title for the pane with summary information.
-        String title = String.format("Order #%d  |  Date: %s  |  Status: %s  |  Total: $%.2f",
-                order.getOid(), order.getDate().toString(), order.getStatus(), grandTotal);
+            Function<Order, String[]> mapper = o -> {
+                Payment payment = paymentDAO.getById(o.getOid());
+                double total = (payment != null) ? payment.getTotalAmount() : 0.0;
 
-        // Get the list of products for this order.
-        List<OrderProduct> productsInOrder = orderProductDAO.getByOrderIdWithDetails(order.getOid());
+                return new String[]{
+                        "Order #" + o.getOid(), // Title
+                        "Date: " + o.getDate() + "  |  Status: " + o.getStatus(), // Line 1
+                        "Total: $" + String.format("%.2f", total) // Line 2
+                };
+            };
 
-        // Create a ListView to display the products.
-        ListView<String> productListView = new ListView<>();
-        for (OrderProduct op : productsInOrder) {
-            String productInfo = String.format("%s (x%d) - $%.2f each",
-                    op.getProductName(), op.getQuantity(), op.getPriceAtPurchase());
-            productListView.getItems().add(productInfo);
+            // Actions: Define what happens when clicking the menu
+            List<CardAction> actions = new ArrayList<>();
+
+            // 1. View Items (Always available)
+            actions.add(new CardAction("View Items", () -> showOrderDetails(order)));
+
+            // 2. Cancel Order (Only if PENDING)
+            if (order.getStatus().equalsIgnoreCase("PENDING")) {
+                actions.add(new CardAction("Cancel Order", () -> handleCancel(order)));
+            }
+
+            // 3. Re-order (Only for Past Orders)
+            if (order.getStatus().equalsIgnoreCase("DELIVERED") || order.getStatus().equalsIgnoreCase("CANCELLED")) {
+                actions.add(new CardAction("Re-order Items", () -> handleReorder(order)));
+            }
+
+            controller.setData(order, mapper, actions);
+            cardContainer.getChildren().add(cardNode);
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        return new TitledPane(title, productListView);
     }
 
-    /**
-     * Load small page icons and set them on the corresponding ImageView.
-     */
+    private void handleCancel(Order order) {
+        // 1. Validation
+        if (!order.getStatus().equalsIgnoreCase("PENDING")) {
+            showAlert("Error", "Only pending orders can be cancelled.");
+            return;
+        }
+
+        // 2. Confirmation
+        boolean confirmed = Alerts.showConfirmation("Cancel Order #" + order.getOid());
+
+        if (confirmed) {
+            // Get all items in this order
+            List<OrderProduct> items = orderProductDAO.getByOrderIdWithDetails(order.getOid());
+
+            // Loop through and put them back
+            for (OrderProduct op : items) {
+                productDAO.increaseStock(op.getProductId(), op.getQuantity());
+            }
+
+            // 3. Update Status to CANCELLED
+            if (orderDAO.updateStatus(order.getOid(), "CANCELLED")) {
+                showAlert("Success", "Order has been cancelled and items returned to stock.");
+                loadOrders();
+            } else {
+                showAlert("Error", "Failed to cancel order.");
+            }
+        }
+    }
+
+    private void handleReorder(Order order) {
+        ArrayList<Product> cart = session.getCart();
+        cart.clear();
+        List<OrderProduct> oldItems = orderProductDAO.getByOrderIdWithDetails(order.getOid());
+
+        if (oldItems.isEmpty()) {
+            showAlert("Error", "This order has no items to re-order.");
+            return;
+        }
+
+        int totalItemsAdded = 0;
+        List<String> reportLog = new ArrayList<>();
+
+        for (OrderProduct op : oldItems) {
+            // 1. Get the CURRENT product details
+            Product currentProduct = productDAO.getById(op.getProductId());
+
+            // 2. Check validity
+            if (currentProduct == null || currentProduct.isHidden()) {
+                reportLog.add(op.getProductName() + " (No longer sold)");
+                continue;
+            }
+
+            int originalQty = op.getQuantity();
+            int currentStock = currentProduct.getStock();
+
+            // 3. Try to add original quantity, otherwise take what's left
+            if (currentStock <= 0) {
+                reportLog.add(currentProduct.getName() + " (Out of Stock)");
+            } else {
+                // If we want 5 but have 3, we take 3. If we have 10, we take 5.
+                int quantityToAdd = Math.min(originalQty, currentStock);
+
+
+                cart.add(currentProduct);
+                currentProduct.setCount(quantityToAdd);
+
+                totalItemsAdded += quantityToAdd;
+
+                // Log specific outcomes
+                if (quantityToAdd < originalQty) {
+                    reportLog.add(currentProduct.getName() + ": Added " + quantityToAdd + " (Only " + currentStock + " left in stock)");
+                }
+            }
+        }
+
+        // 4. Final Feedback
+        if (totalItemsAdded > 0) {
+            String msg = "Added " + totalItemsAdded + " items to your cart.";
+
+            if (!reportLog.isEmpty()) {
+                msg += "\n\nNotes:\n" + String.join("\n", reportLog);
+            }
+
+            showAlert("Cart Updated", msg);
+            PageManager.loadPage("customer/pages/cart.fxml");
+        } else {
+            showAlert("Re-order Failed", "None of the items are available right now.\n\n" + String.join("\n", reportLog));
+        }
+    }
+
+    private void showOrderDetails(Order order) {
+        List<OrderProduct> products = orderProductDAO.getByOrderIdWithDetails(order.getOid());
+        StringBuilder details = new StringBuilder();
+        for (OrderProduct op : products) {
+            details.append("• ").append(op.getProductName())
+                    .append(" (x").append(op.getQuantity()).append(")")
+                    .append(" - $").append(String.format("%.2f (Each)", op.getPriceAtPurchase()))
+                    .append("\n");
+        }
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Order Details");
+        alert.setHeaderText("Order #" + order.getOid());
+        alert.setContentText(details.toString());
+        alert.showAndWait();
+    }
+
+    // Helper
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
     private void loadImages() {
         try {
             Image returnIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/icons/undoWhite.png")));
             iconReturn.setImage(returnIcon);
         } catch (Exception e) {
             System.err.println("Failed to load icon: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
-    /**
-     * Navigate back to the customer home page.
-     */
     @FXML
     public void handleBack() {
         PageManager.loadPage("customer/pages/home.fxml");

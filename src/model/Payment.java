@@ -1,22 +1,12 @@
 package model;
 
+import model.enums.PaymentMethod;
+
 public class Payment {
 
-    public static enum Status {
-        PENDING,
-        PAID,
-        FAILED
-    }
-
-    public static enum Method {
-        CREDIT_CARD,
-        BANK_TRANSFER,
-        CASH
-    }
 
     private int orderId;
-    private Method method;
-    private Status status;
+    private String method;
     private int customerId;
     private double totalAmount;
 
@@ -26,10 +16,9 @@ public class Payment {
     public Payment() {
     }
 
-    public Payment(int orderId, Method method, Status status, int customerId, double totalAmount) {
+    public Payment(int orderId, String method, int customerId, double totalAmount) {
         this.orderId = orderId;
         this.method = method;
-        this.status = status;
         this.customerId = customerId;
         this.totalAmount = totalAmount;
     }
@@ -43,20 +32,17 @@ public class Payment {
         this.orderId = orderId;
     }
 
-    public Method getMethod() {
+    public String getMethod() {
         return method;
     }
 
-    public void setMethod(Method method) {
-        this.method = method;
-    }
+    public void setMethod(String incomingMethod) {
+        if (incomingMethod == null)
+            throw new IllegalArgumentException("Method cannot be null");
+        if (!PaymentMethod.isValidMethod(incomingMethod))
+            throw new IllegalArgumentException("Invalid method " + incomingMethod);
 
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
+        method = incomingMethod;
     }
 
     public int getCustomerId() {

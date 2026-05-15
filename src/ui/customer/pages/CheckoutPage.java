@@ -6,6 +6,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import model.*;
+import model.enums.OrderStatus;
+import model.enums.PaymentMethod;
 import ui.PageManager;
 
 import java.sql.Date;
@@ -22,7 +24,7 @@ public class CheckoutPage {
     @FXML private Label taxesLabel;
     @FXML private Label grandTotalLabel;
     @FXML private ChoiceBox<ShippingCompany> shippingChoiceBox;
-    @FXML private ChoiceBox<Payment.Method> paymentChoiceBox;
+    @FXML private ChoiceBox<String> paymentChoiceBox;
     @FXML private Label errorLabel;
 
     private final Session session = Session.getInstance();
@@ -46,11 +48,13 @@ public class CheckoutPage {
         }
 
         addressLabel.setText(customer.getAddress());
-        subtotal = cartItems.stream().mapToDouble(Product::getUnitPrice).sum();
+        subtotal = cartItems.stream().mapToDouble( p -> {
+            return p.getCount() * p.getUnitPrice();
+        }).sum();
 
         List<ShippingCompany> shippingCompanies = shippingDAO.getAll();
         shippingChoiceBox.setItems(FXCollections.observableArrayList(shippingCompanies));
-        paymentChoiceBox.setItems(FXCollections.observableArrayList(Payment.Method.values()));
+        paymentChoiceBox.setItems(FXCollections.observableArrayList(PaymentMethod.getAllMethod()));
 
         shippingChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> updateCostSummary());
         paymentChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> updateCostSummary());
@@ -60,7 +64,7 @@ public class CheckoutPage {
 
     private void updateCostSummary() {
         double shippingCost = shippingChoiceBox.getValue() != null ? shippingChoiceBox.getValue().getCost() : 0.0;
-        double paymentFee = Payment.Method.CASH.equals(paymentChoiceBox.getValue()) ? CASH_ON_DELIVERY_FEE : 0.0;
+        double paymentFee = "CASH".equals(paymentChoiceBox.getValue()) ? CASH_ON_DELIVERY_FEE : 0.0;
         double totalBeforeTax = subtotal + shippingCost + paymentFee;
         double taxAmount = totalBeforeTax * TAX_RATE;
         double grandTotal = totalBeforeTax + taxAmount;
@@ -75,7 +79,7 @@ public class CheckoutPage {
     @FXML
     private void handleConfirmAndPay() {
         ShippingCompany selectedShipping = shippingChoiceBox.getValue();
-        Payment.Method selectedPayment = paymentChoiceBox.getValue(); // Now an enum
+        String selectedPayment = paymentChoiceBox.getValue(); // Now an enum
         if (selectedShipping == null || selectedPayment == null) {
             errorLabel.setText("Please select shipping and payment options.");
             return;
@@ -83,14 +87,13 @@ public class CheckoutPage {
 
         // Final Calculations
         double shippingCost = selectedShipping.getCost();
-        double grandTotal = subtotal + shippingCost + ("CASH".equals(selectedPayment.name()) ? CASH_ON_DELIVERY_FEE : 0.0);
+        double grandTotal = subtotal + shippingCost + ("CASH".equals(selectedPayment) ? CASH_ON_DELIVERY_FEE : 0.0);
         grandTotal *= (1 + TAX_RATE);
 
         // Final Stock Validation
-        Map<Product, Long> quantities = session.getCart().stream().collect(Collectors.groupingBy(p -> p, Collectors.counting()));
-        for (Map.Entry<Product, Long> entry : quantities.entrySet()) {
-            if (entry.getKey().getStock() < entry.getValue()) {
-                errorLabel.setText("Error: Not enough stock for " + entry.getKey().getName());
+        for (Product product : session.getCart()) {
+            if (product.getStock() < product.getCount()) {
+                errorLabel.setText("Error: Not enough stock for " + product.getName());
                 return;
             }
         }
@@ -100,7 +103,7 @@ public class CheckoutPage {
         newOrder.setCustomerId(session.getCustomerId());
         newOrder.setShippingId(selectedShipping.getSid());
         newOrder.setDate(new Date(System.currentTimeMillis()));
-        newOrder.setStatus(Order.Status.PENDING); // Using the enum
+        newOrder.setStatus((OrderStatus.isValidStatus("PENDING")) ? "PENDING" : null); //check against DB!!
         newOrder.setShippingCost(shippingCost);
 
         int orderId = orderDAO.insert(newOrder);
@@ -110,17 +113,14 @@ public class CheckoutPage {
         }
 
         // Link Products and Reduce Stock
-        for (Map.Entry<Product, Long> entry : quantities.entrySet()) {
-            Product product = entry.getKey();
-            int quantity = entry.getValue().intValue();
+        for (Product product : session.getCart()) {
+            int quantity = product.getCount();
             OrderProduct orderProduct = new OrderProduct(orderId, product.getPid(), quantity, product.getUnitPrice());
             orderProductDAO.insert(orderProduct);
             productDAO.reduceStock(product.getPid(), quantity);
         }
 
-        // Set payment status intelligently using the enum
-        Payment.Status paymentStatus = Payment.Method.CASH.equals(selectedPayment) ? Payment.Status.PENDING : Payment.Status.PAID;
-        Payment payment = new Payment(orderId, selectedPayment, paymentStatus, session.getCustomerId(), grandTotal);
+        Payment payment = new Payment(orderId, selectedPayment, session.getCustomerId(), grandTotal);
         paymentDAO.insert(payment);
 
         session.getCart().clear();

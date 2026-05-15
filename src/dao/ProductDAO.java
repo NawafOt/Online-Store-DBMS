@@ -25,6 +25,7 @@ public class ProductDAO extends BaseDAO<Product> {
         product.setUnitPrice(rs.getDouble("UnitPrice"));
         product.setCategory(rs.getString("Category"));
         product.setStock(rs.getInt("Stock"));
+        product.setHidden(rs.getBoolean("Hide"));
         return product;
     }
 
@@ -54,9 +55,19 @@ public class ProductDAO extends BaseDAO<Product> {
         return rowsAffected > 0;
     }
 
+    public boolean updateHide(Product product){
+        String query = "UPDATE Product SET Hide = ? WHERE Pid = ?";
+        int rowsAffected = executeUpdate(
+                query,
+                product.isHidden(),
+                product.getPid()
+        );
+        return rowsAffected > 0;
+    }
+
     @Override
     public boolean delete(int pid) {
-        String query = "DELETE FROM Product WHERE Pid = ?";
+        String query = "UPDATE Product SET Hide = 1 WHERE Pid = ?";
         int rowsAffected = executeUpdate(query, pid);
         return rowsAffected > 0;
     }
@@ -70,7 +81,12 @@ public class ProductDAO extends BaseDAO<Product> {
 
     @Override
     public List<Product> getAll() {
-        String query = "SELECT * FROM Product";
+        String query = "SELECT * FROM Product WHERE Hide = 0";
+        return executeQuery(query);
+    }
+
+    public List<Product> getHidden() {
+        String query = "SELECT * FROM Product WHERE Hide = 1";
         return executeQuery(query);
     }
 
@@ -105,15 +121,18 @@ public class ProductDAO extends BaseDAO<Product> {
         return executeQuery(query);
     }
 
-
-    public List<Product> searchByName(String name) {
+    public List<Product> searchByNameAdmin(String name) {
         String query = "SELECT * FROM Product WHERE Name LIKE ?";
         return executeQuery(query, "%" + name + "%");
     }
 
+    public List<Product> searchByName(String name) {
+        String query = "SELECT * FROM Product WHERE Name LIKE ? AND Hide = 0";
+        return executeQuery(query, "%" + name + "%");
+    }
 
     public List<Product> getByCategory(String category) {
-        String query = "SELECT * FROM Product WHERE Category = ?";
+        String query = "SELECT * FROM Product WHERE Category = ? AND Hide = 0";
         return executeQuery(query, category);
     }
 
@@ -125,7 +144,7 @@ public class ProductDAO extends BaseDAO<Product> {
 
 
     public List<Product> getInStockProducts() {
-        String query = "SELECT * FROM Product WHERE Stock > 0";
+        String query = "SELECT * FROM Product WHERE Stock > 0 AND Hide = 0";
         return executeQuery(query);
     }
 
@@ -152,7 +171,7 @@ public class ProductDAO extends BaseDAO<Product> {
 
     public List<String> getAllCategories() {
         List<String> categories = new ArrayList<>();
-        String query = "SELECT DISTINCT Category FROM Product ORDER BY Category";
+        String query = "SELECT DISTINCT Category FROM Product WHERE Hide = 0 ORDER BY Category";
 
         Connection conn = null;
         Statement stmt = null;

@@ -16,6 +16,6 @@
         </MenuButton>
     </HBox>
 
-    <Label fx:id="line1" />
+    <Label fx:id="line1" style="-fx-text-fill: black; -fx-font-size: 14px;" />
     <Label fx:id="line2" styleClass="muted" />
 </VBox>

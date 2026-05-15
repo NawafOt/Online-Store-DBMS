@@ -1,18 +1,14 @@
 package model;
 
+import model.enums.OrderStatus;
+
 import java.sql.Date;
 
 public class Order {
 
-    public static enum Status {
-        PENDING,
-        SHIPPED,
-        DELIVERED,
-        CANCELLED
-    }
 
     private int oid;
-    private Status status;
+    private String status;
     private Date date;
     private int customerId;
     private int shippingId;
@@ -20,6 +16,7 @@ public class Order {
 
     // For display purposes
     private String customerName;
+    private double totalAmount;
 
     public Order() {
         // Default
@@ -34,12 +31,17 @@ public class Order {
         this.oid = oid;
     }
 
-    public Status getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setStatus(String incomingStatus) {
+        if (incomingStatus == null)
+            throw new NullPointerException("Status cannot be null");
+        if (!OrderStatus.isValidStatus(incomingStatus))
+            throw new IllegalArgumentException("Invalid Status " + incomingStatus);
+
+        this.status = incomingStatus.toUpperCase();
     }
 
     public Date getDate() {
@@ -80,5 +82,13 @@ public class Order {
 
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
+    }
+
+    public double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
     }
 }

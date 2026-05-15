@@ -11,6 +11,8 @@ import model.Session;
 import ui.DataReceiver;
 import ui.PageManager;
 
+import java.util.ArrayList;
+
 /**
  * Controller for the product details page.
  * Displays detailed information and allows adding a specified quantity to the cart or wishlist.
@@ -42,14 +44,21 @@ public class ProductDetailsPage implements DataReceiver {
     public void receiveData(Object data) {
         if (data instanceof Product) {
             currentProduct = (Product) data;
+            if (session.getCart().contains(currentProduct)) {
+                int index = session.getCart().indexOf(currentProduct);
+                currentProduct = session.getCart().get(index);
+            }
+
             productNameLabel.setText(currentProduct.getName());
             priceLabel.setText(String.format("$%.2f", currentProduct.getUnitPrice()));
             categoryLabel.setText(currentProduct.getCategory());
-            stockLabel.setText(String.valueOf(currentProduct.getStock()));
+            if(currentProduct.getStock() > currentProduct.getCount())
+                stockLabel.setText(String.valueOf(currentProduct.getStock() - currentProduct.getCount()));
+            else stockLabel.setText("0");
 
             // Configure the quantity spinner
-            if (currentProduct.getStock() > 0) {
-                SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, currentProduct.getStock(), 1);
+            if (currentProduct.getStock() > 0 && currentProduct.getStock() > currentProduct.getCount()) {
+                SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, currentProduct.getStock() - currentProduct.getCount(), 1);
                 quantitySpinner.setValueFactory(valueFactory);
                 addToCartButton.setDisable(false);
             } else {
@@ -75,10 +84,19 @@ public class ProductDetailsPage implements DataReceiver {
     private void handleAddToCart() {
         if (currentProduct != null) {
             int quantity = quantitySpinner.getValue();
-            for (int i = 0; i < quantity; i++) {
-                session.getCart().add(currentProduct);
+            ArrayList<Product> cart = session.getCart();
+
+            if (cart.contains(currentProduct)) {
+                int index = cart.indexOf(currentProduct);
+                cart.get(index).setCount(currentProduct.getCount() + quantity);
+            } else {
+                cart.add(currentProduct);
+                currentProduct.setCount(quantity);
             }
+
             feedbackLabel.setText(quantity + " x '" + currentProduct.getName() + "' added to your cart!");
+
+            receiveData(currentProduct);
         }
     }
 

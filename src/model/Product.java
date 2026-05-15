@@ -7,6 +7,8 @@ public class Product {
     private double unitPrice;
     private String category;
     private int stock;
+    private boolean hidden;
+    private int count;
 
     public Product() {
     }
@@ -27,10 +29,10 @@ public class Product {
     }
 
     // Getters and Setters
+
     public int getPid() {
         return pid;
     }
-
     public void setPid(int pid) {
         this.pid = pid;
     }
@@ -55,6 +57,14 @@ public class Product {
         return category;
     }
 
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
     public void setCategory(String category) {
         this.category = category;
     }
@@ -65,6 +75,14 @@ public class Product {
 
     public void setStock(int stock) {
         this.stock = stock;
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
     }
 
     public boolean isInStock() {
@@ -84,6 +102,19 @@ public class Product {
                 ", category='" + category + '\'' +
                 ", stock=" + stock +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return pid == product.pid;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(pid);
     }
 
     public String getDisplayName() {

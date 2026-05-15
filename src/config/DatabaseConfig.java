@@ -117,19 +117,4 @@ public class DatabaseConfig {
         }
         return false;
     }
-
-    /**
-     * Gets database URL for information purposes.
-     * Password is NOT included for security.
-     *
-     * @return database connection URL
-     */
-    public static String getDatabaseInfo() {
-        if (!isInitialized) {
-            loadProperties();
-        }
-        return "Database: " + properties.getProperty("db.name") +
-                " at " + properties.getProperty("db.host") +
-                ":" + properties.getProperty("db.port");
-    }
 }
