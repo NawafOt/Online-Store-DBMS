@@ -1,39 +1,32 @@
-# CSC380 – Database Application Project (Phase 2: Application Demo)
+# Online Store
 
----
+A JavaFX desktop app connected to a MySQL database, built for the Database Systems course at KSU. It's a learning project that connects our knowledge of coding with databases.
 
-#### $\large \color{red}{\text{Demo Week: Last week before the final exam}}$
+## What you can do
 
----
+- Add, edit, delete, and search customers, products, orders, and shipping companies
+- Track order status (Pending → Shipping → Delivered / Cancelled)
+- Record payments (Credit Card, Bank Transfer, or Cash)
+- Manage customer wishlists
+- ComboBoxes for foreign key fields (e.g. picking a shipping company on an order)
 
-## Requirements
+## Tech
 
-For Phase 2, students are required to develop and demonstrate a GUI application that is connected to the database designed during Phase 1. There is no written report required for this phase but an ER diagram printed and shown during the demo.
+- **JavaFX** — GUI
+- **MySQL** — database
+- **JDBC** — connecting the two
 
-- ### **Language of Choice:**  
-  Students may use any programming language to develop the application.
+## Setup
+ 
+1. Run `OnlineStore.sql` in MySQL Workbench to create the schema
+2. Copy `database.properties.example` → `database.properties` and fill in your MySQL username and password
+3. Run the project from your IDE
 
-- ### **Database Connection:**  
-  The application must connect to the database schema developed/implemented in Phase 1.
+## Structure
 
-- ### **GUI Operations:**  
-  - The application must support **Insert**, **Delete**, **Update**, and **Search** operations through graphical user interface elements.
-  - **ComboBoxes** (or equivalent controls) must be used to load and select **foreign key** values in forms.
-  - The application must use appropriate UI components (e.g., tables, lists, detail views) to display the results of queries clearly and effectively.
-
-- ### **Demonstration:**  
-  - Each group of students will present a **live demo** of the developed application on their **own laptop or PC**.
-  - The application must be **fully functional** and **interact with the actual database**.
-  - **Demo scheduling** will be managed via the shared sheet.
-
----
-
-## Deadline
-
-- **Phase 2 Demo:** Last week before the final exam
-
-
-## Late Submission Policy
-
-- Early demos are encouraged.
-- Late demos will incur a **1 mark deduction per day**, up to a maximum of **three working days**.
+```
+├── src/          # Java source + controllers
+├── resources/    # FXML files and stylesheets, database.properties
+├── docs/         # ER diagram
+└── OnlineStore.sql
+```
