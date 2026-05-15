@@ -1,3 +1,5 @@
+#### *This is an archived Course Project*
+
 # Online Store
 
 A JavaFX desktop app connected to a MySQL database, built for the Database Systems course at KSU. It's a learning project that connects our knowledge of coding with databases.
